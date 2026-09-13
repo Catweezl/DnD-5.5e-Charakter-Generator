@@ -1,2 +1,4 @@
 # DnD-5.5e-Charakter-Generator
 Offline D&amp;D 2024 Charakter-Generator (HTML/JS, läuft direkt im Browser, keine Installation nötig). Integriert: Player's Handbook 2024 (Kernregeln), Eberron: Forge of the Artificer (Artificer-Klasse), Heroes of Faerûn (Zusatz-Subklassen/Hintergründe/Feats) und Ravenloft: The Horrors Within (Zusatz-Subklassen/Feats).
+
+Hinweis: Dies ist ein inoffizielles Fan-Projekt, erstellt unter der Fan Content Policy von Wizards of the Coast. Es basiert auf Inhalten aus D&D 2024 sowie den Erweiterungen Eberron: Forge of the Artificer, Heroes of Faerûn und Ravenloft: The Horrors Within — alle Rechte an diesen Inhalten liegen bei Wizards of the Coast. Dieses Tool wird nicht von Wizards of the Coast unterstützt und steht in keiner Verbindung zu ihnen. Es ist kostenlos und darf nicht verkauft oder gegen Bezahlung weitergegeben werden.
