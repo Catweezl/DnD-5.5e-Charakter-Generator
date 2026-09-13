@@ -88,6 +88,9 @@
   table th, table td{border:1px solid var(--border);padding:5px 8px;text-align:left;}
   table th{background:var(--input-bg);color:var(--accent2);}
   .gold-tracker{position:sticky;top:0;background:var(--panel);padding:8px 12px;border:1px solid var(--accent);border-radius:6px;margin-bottom:10px;font-weight:bold;}
+  .live-ability-bar{position:sticky;top:0;z-index:5;background:var(--panel);border:1px solid var(--border);border-radius:6px;padding:6px 12px;margin:0 0 10px;display:flex;gap:14px;flex-wrap:wrap;justify-content:center;font-size:0.82em;}
+  .live-ability-bar span{white-space:nowrap;}
+  .live-ability-bar b{color:var(--accent2);}
   footer{text-align:center;color:var(--muted);font-size:0.8em;margin:20px 0;}
   .tabs{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;}
   .tab-btn{padding:6px 12px;border-radius:6px;background:var(--input-bg);border:1px solid var(--border);cursor:pointer;font-size:0.85em;}
@@ -107,6 +110,7 @@
   </div>
   <div style="text-align:center;font-size:0.78em;color:var(--muted);margin:-8px 0 8px;" id="sourcebooksNote">Verwendete Regelbücher: Player's Handbook 2024</div>
   <div class="steps" id="stepsNav"></div>
+  <div id="liveAbilityBar"></div>
   <div id="app"></div>
   <footer>D&D 2024 (5.5e) &middot; Kein offizielles Wizards-of-the-Coast-Produkt &middot; Version 5</footer>
 </div>
@@ -121,8 +125,8 @@ document.getElementById('themeSwitch').addEventListener('change', function(){
 });
 
 // ===== STATE =====
-const STEPS = ["Level","Attribute","Volk","Klassen","Trefferpunkte","Entscheidungen","Zauber","Hintergrund","Ausrüstung","Einkaufen","Zusammenfassung"];
-const STEP = {LEVEL:0, ABILITIES:1, SPECIES:2, CLASSES:3, HP:4, DECISIONS:5, SPELLS:6, BACKGROUND:7, EQUIPMENT:8, SHOPPING:9, SUMMARY:10};
+const STEPS = ["Level","Attribute","Volk","Hintergrund","Klassen","Trefferpunkte","Entscheidungen","Zauber","Ausrüstung","Einkaufen","Zusammenfassung"];
+const STEP = {LEVEL:0, ABILITIES:1, SPECIES:2, BACKGROUND:3, CLASSES:4, HP:5, DECISIONS:6, SPELLS:7, EQUIPMENT:8, SHOPPING:9, SUMMARY:10};
 const ABILITIES = ["Strength","Dexterity","Constitution","Intelligence","Wisdom","Charisma"];
 const ABIL_DE = {Strength:"Stärke",Dexterity:"Geschicklichkeit",Constitution:"Konstitution",Intelligence:"Intelligenz",Wisdom:"Weisheit",Charisma:"Charisma"};
 const FULL_CASTERS = ['bard','cleric','druid','sorcerer','wizard'];
@@ -292,6 +296,7 @@ function goTo(step){
 
 function render(){
   renderSteps();
+  renderLiveAbilityBar();
   const app = document.getElementById('app');
   switch(state.step){
     case STEP.LEVEL: app.innerHTML = renderLevelStep(); break;
@@ -306,6 +311,23 @@ function render(){
     case STEP.SHOPPING: app.innerHTML = renderShoppingStep(); attachShoppingHandlers(); break;
     case STEP.SUMMARY: app.innerHTML = renderSummaryStep(); attachSummaryHandlers(); break;
   }
+}
+
+// Small sticky bar showing the current fully-computed ability scores (species + background +
+// ASI bonuses as far as known), so the player doesn't have to scroll/click back to the Abilities
+// step to check a number while making decisions that depend on it (Background points, primary
+// ability at Classes, CON for HP).
+function renderLiveAbilityBar(){
+  const bar = document.getElementById('liveAbilityBar');
+  if(!bar) return;
+  const relevantSteps = [STEP.BACKGROUND, STEP.CLASSES, STEP.HP];
+  if(!relevantSteps.includes(state.step)){ bar.innerHTML=''; return; }
+  const scores = computeFullFinalAbilityScoresSafe();
+  bar.innerHTML = `<div class="live-ability-bar">${ABILITIES.map(a=>{
+    const abbrev = {Strength:'STR', Dexterity:'DEX', Constitution:'CON', Intelligence:'INT', Wisdom:'WIS', Charisma:'CHA'}[a];
+    const m = mod(scores[a]);
+    return `<span><b>${abbrev}</b> ${scores[a]} (${signed(m)})</span>`;
+  }).join('')}</div>`;
 }
 
 // ---------- STEP 0: LEVEL ----------
@@ -339,7 +361,7 @@ function nextFromLevel(){
     state.backgroundToolChoice = null;
   }
   state.allowOtherSettingContent = newValue;
-  goTo(1);
+  goTo(STEP.ABILITIES);
 }
 
 // ---------- STEP 1: ABILITIES ----------
@@ -383,7 +405,7 @@ function renderAbilityStep(){
     ${methodHtml}
     ${inputsHtml}
     <div style="margin-top:16px;">
-      <button class="secondary" onclick="goTo(0)">← Zurück</button>
+      <button class="secondary" onclick="goTo(STEP.LEVEL)">← Zurück</button>
       <button onclick="nextFromAbilities()">Weiter →</button>
     </div>
   </div>`;
@@ -495,7 +517,7 @@ function nextFromAbilities(){
     for(const a of ABILITIES){ if(state.rolledAssignment[a]===undefined){ alert('Bitte jedem Attribut einen gewürfelten Wert zuordnen.'); return; } }
     ABILITIES.forEach(a=>{ state.abilityScores[a] = state.rolledValues[state.rolledAssignment[a]]; });
   }
-  goTo(2);
+  goTo(STEP.SPECIES);
 }
 // ---------- STEP 2: SPECIES ----------
 function resolveSpeciesSubChoiceDetails(){
@@ -640,7 +662,7 @@ function renderSpeciesStep(){
     <div class="grid">${cards}</div>
     ${info}
     <div style="margin-top:16px;">
-      <button class="secondary" onclick="goTo(1)">← Zurück</button>
+      <button class="secondary" onclick="goTo(STEP.ABILITIES)">← Zurück</button>
       <button onclick="nextFromSpecies()" ${!state.speciesId?'disabled':''}>Weiter →</button>
     </div>
   </div>`;
@@ -716,7 +738,7 @@ function nextFromSpecies(){
     if(!state.speciesSkillChoice){ alert('Bitte eine Fertigkeit für Skillful wählen.'); return; }
     if(!state.speciesExtraFeat || !state.speciesExtraFeat.name){ alert('Bitte einen zusätzlichen Origin Feat für Versatile wählen.'); return; }
   }
-  goTo(3);
+  goTo(STEP.BACKGROUND);
 }
 
 // ---------- STEP 3: CLASSES (Multiclass) ----------
@@ -793,7 +815,7 @@ function renderClassStep(){
 
   return `
   <div class="panel">
-    <h2>Schritt 4: Klasse(n) – frei kombinierbares Multiclassing</h2>
+    <h2>Schritt 5: Klasse(n) – frei kombinierbares Multiclassing</h2>
     <p>Gesamtstufe: <b>${state.level}</b> &middot; bereits verteilt: <b>${used}</b> &middot; verbleibend: <b style="${remaining!==0?'color:#c0692f':'color:#3a8f3a'}">${remaining}</b></p>
     ${rows || '<p style="color:var(--muted)">Noch keine Klasse gewählt.</p>'}
     <h3 style="margin-top:20px;">Klasse hinzufügen</h3>
@@ -801,7 +823,7 @@ function renderClassStep(){
     ${proficiencyInfo}
     ${skillChoiceHtml}
     <div style="margin-top:16px;">
-      <button class="secondary" onclick="goTo(2)">← Zurück</button>
+      <button class="secondary" onclick="goTo(STEP.BACKGROUND)">← Zurück</button>
       <button onclick="nextFromClasses()" ${remaining!==0 || state.classes.length===0 ?'disabled':''}>Weiter →</button>
     </div>
     ${remaining!==0? '<p class="warn">Die Summe der Klassenlevel muss genau der Gesamtstufe entsprechen.</p>':''}
@@ -903,14 +925,14 @@ function buildHpLevelSequence(){
 
 function renderHPStep(){
   if(state.classes.length===0){
-    return `<div class="panel"><h2>Schritt 5: Trefferpunkte (HP)</h2><p>Bitte zuerst eine Klasse wählen.</p>
-    <button class="secondary" onclick="goTo(3)">← Zurück</button></div>`;
+    return `<div class="panel"><h2>Schritt 6: Trefferpunkte (HP)</h2><p>Bitte zuerst eine Klasse wählen.</p>
+    <button class="secondary" onclick="goTo(STEP.CLASSES)">← Zurück</button></div>`;
   }
   const conMod = mod(computeFullFinalAbilityScoresSafe().Constitution);
   const startClass = classDef(firstClassId());
   const maxFirst = startClass.hitDie + conMod;
 
-  let html = `<div class="panel"><h2>Schritt 5: Trefferpunkte (HP)</h2>
+  let html = `<div class="panel"><h2>Schritt 6: Trefferpunkte (HP)</h2>
     <p style="font-size:0.85em;color:var(--muted);">Stufe 1 deiner Startklasse gibt immer den Maximalwert des Hit Die. Für jede weitere Stufe (auch bei Multiclass-Klassen) wählst du zwischen Durchschnittswert und manuellem Würfelergebnis.</p>
     <div class="choice-box">
       <h4>Charakter-Stufe 1 (${startClass.name}, d${startClass.hitDie})</h4>
@@ -942,7 +964,7 @@ function renderHPStep(){
   html += `<div class="info-box"><b>Aktuelle Gesamtsumme (soweit ausgefüllt):</b> ${runningTotal + hpFlatBonusPerLevel()*state.level} HP${hpFlatBonusNoteInline()}</div>`;
 
   html += `<div style="margin-top:16px;">
-      <button class="secondary" onclick="goTo(3)">← Zurück</button>
+      <button class="secondary" onclick="goTo(STEP.CLASSES)">← Zurück</button>
       <button onclick="tryNextFromHP()">Weiter →</button>
     </div></div>`;
   return html;
@@ -977,7 +999,7 @@ function tryNextFromHP(){
     if(!stored || !stored.mode){ alert('Bitte für alle weiteren Stufen Durchschnitt oder Würfelwert wählen.'); return; }
     if(stored.mode==='roll' && !stored.rollValue){ alert('Bitte einen gewürfelten Wert eintragen.'); return; }
   }
-  goTo(5);
+  goTo(STEP.DECISIONS);
 }
 
 function hpFlatBonusPerLevel(){
@@ -1294,16 +1316,16 @@ function renderLevelUpStep(){
   const decisions = collectPendingDecisions();
   if(decisions.length===0){
     return `<div class="panel">
-      <h2>Schritt 5: Level-Up-Entscheidungen</h2>
+      <h2>Schritt 7: Level-Up-Entscheidungen</h2>
       <p style="color:var(--muted)">Für deine aktuelle Klassenkombination und Stufe fallen keine weiteren Wahlpunkte (ASI/Feat, Fighting Style, Subclass) an.</p>
       <div style="margin-top:16px;">
-        <button class="secondary" onclick="goTo(4)">← Zurück</button>
-        <button onclick="goTo(6)">Weiter →</button>
+        <button class="secondary" onclick="goTo(STEP.HP)">← Zurück</button>
+        <button onclick="goTo(STEP.SPELLS)">Weiter →</button>
       </div>
     </div>`;
   }
 
-  let html = `<div class="panel"><h2>Schritt 5: Level-Up-Entscheidungen</h2>
+  let html = `<div class="panel"><h2>Schritt 7: Level-Up-Entscheidungen</h2>
     <p style="color:var(--muted);font-size:0.88em;">Für jede erreichte Klassenstufe mit Wahlmöglichkeit triffst du hier die Entscheidung. Diese fließt am Ende in deine finalen Attributswerte und Fertigkeiten ein.</p>`;
 
   decisions.forEach(d=>{
@@ -1333,7 +1355,7 @@ function renderLevelUpStep(){
         if(reached.length){
           html += `<div class="info-box"><b>${current} – automatisch immer vorbereitete Zauber:</b><br>
             ${reached.map(([lvl,spells])=>`Stufe ${lvl}: ${spells.join(', ')}`).join('<br>')}
-            <p style="font-size:0.78em;color:var(--muted);margin-top:4px;">Zählen nicht gegen dein normales Zauber-Limit. Einige davon sind Grad 4+ und daher nicht in der Zauber-Auswahlliste (Schritt 6) enthalten – bitte im PHB nachschlagen.</p>
+            <p style="font-size:0.78em;color:var(--muted);margin-top:4px;">Zählen nicht gegen dein normales Zauber-Limit. Einige davon sind Grad 4+ und daher nicht in der Zauber-Auswahlliste (Schritt 8) enthalten – bitte im PHB nachschlagen.</p>
             </div>`;
         }
       }
@@ -1520,7 +1542,7 @@ function renderLevelUpStep(){
   });
 
   html += `<div style="margin-top:16px;">
-      <button class="secondary" onclick="goTo(4)">← Zurück</button>
+      <button class="secondary" onclick="goTo(STEP.HP)">← Zurück</button>
       <button onclick="tryNextFromLevelUp()">Weiter →</button>
     </div></div>`;
   return html;
@@ -2095,7 +2117,7 @@ function tryNextFromLevelUp(){
       if(picked.length < d.count){ alert('Bitte für '+classDef(d.classId).name+' alle '+d.count+' '+d.school+'-Savant-Zauber wählen.'); return; }
     }
   }
-  goTo(6);
+  goTo(STEP.SPELLS);
 }
 
 // compute final ability scores after ASI + feat sub-ability boosts applied
@@ -2295,15 +2317,15 @@ function renderSpellStep(){
   const casters = spellCasterClasses();
   if(casters.length===0){
     return `<div class="panel">
-      <h2>Schritt 6: Zauber</h2>
+      <h2>Schritt 8: Zauber</h2>
       <p style="color:var(--muted)">Keine deiner gewählten Klassen wirkt Zauber.</p>
       <div style="margin-top:16px;">
-        <button class="secondary" onclick="goTo(5)">← Zurück</button>
-        <button onclick="goTo(7)">Weiter →</button>
+        <button class="secondary" onclick="goTo(STEP.DECISIONS)">← Zurück</button>
+        <button onclick="goTo(STEP.EQUIPMENT)">Weiter →</button>
       </div>
     </div>`;
   }
-  let html = `<div class="panel"><h2>Schritt 6: Zauber</h2>
+  let html = `<div class="panel"><h2>Schritt 8: Zauber</h2>
     <p style="font-size:0.85em;color:var(--muted);">Zaubertricks und Grad-1-bis-3-Zauber (Name + Schule). Höhere Grade und Beschreibungstexte sind in dieser Version nicht enthalten – bitte im PHB nachschlagen.</p>`;
 
   casters.forEach(cl=>{
@@ -2409,7 +2431,7 @@ function renderSpellStep(){
   });
 
   html += `<div style="margin-top:16px;">
-      <button class="secondary" onclick="goTo(5)">← Zurück</button>
+      <button class="secondary" onclick="goTo(STEP.DECISIONS)">← Zurück</button>
       <button onclick="tryNextFromSpells()">Weiter →</button>
     </div></div>`;
   return html;
@@ -2442,7 +2464,7 @@ function tryNextFromSpells(){
       }
     }
   }
-  goTo(7);
+  goTo(STEP.EQUIPMENT);
 }
 
 function attachSpellHandlers(){
@@ -2688,12 +2710,12 @@ function renderBackgroundStep(){
 
   return `
   <div class="panel">
-    <h2>Schritt 7: Hintergrund (Background)</h2>
+    <h2>Schritt 4: Hintergrund (Background)</h2>
     <p style="color:var(--muted);font-size:0.85em;margin-bottom:12px;">${state.allowOtherSettingContent? 'Setting-gebundene Inhalte (Eberron/Ravenloft) sind sichtbar – Einstellung auf Schritt 1 änderbar.' : 'Setting-gebundene Inhalte (Eberron/Ravenloft) sind ausgeblendet – Einstellung auf Schritt 1 änderbar.'}</p>
     <div class="grid">${cards}</div>
     ${details}
     <div style="margin-top:16px;">
-      <button class="secondary" onclick="goTo(6)">← Zurück</button>
+      <button class="secondary" onclick="goTo(STEP.SPECIES)">← Zurück</button>
       <button onclick="nextFromBackground()">Weiter →</button>
     </div>
   </div>`;
@@ -2894,7 +2916,7 @@ function nextFromBackground(){
     const picked = state.expertiseChoices[d.key] || [];
     if(picked.length < d.count){ alert('Bitte für '+classDef(d.classId).name+' Stufe '+d.level+' alle '+d.count+' Expertise-Fertigkeiten wählen.'); return; }
   }
-  goTo(8);
+  goTo(STEP.CLASSES);
 }
 // ---------- STEP 7: EQUIPMENT (class/background separated) ----------
 function renderEquipmentStep(){
@@ -2906,7 +2928,7 @@ function renderEquipmentStep(){
     : '';
   return `
   <div class="panel">
-    <h2>Schritt 8: Ausrüstung</h2>
+    <h2>Schritt 9: Ausrüstung</h2>
     ${multiInfo}
 
     <div class="choice-box">
@@ -2938,7 +2960,7 @@ function renderEquipmentStep(){
     </div>
 
     <div style="margin-top:16px;">
-      <button class="secondary" onclick="goTo(7)">← Zurück</button>
+      <button class="secondary" onclick="goTo(STEP.SPELLS)">← Zurück</button>
       <button onclick="nextFromEquipment()">Weiter →</button>
     </div>
   </div>`;
@@ -2949,7 +2971,7 @@ function nextFromEquipment(){
   const bgEquipEl = document.getElementById('bgEquipSelect');
   state.backgroundEquipChoice = bgEquipEl ? bgEquipEl.value : 'gold'; // custom background: no package option, always gold
   state.extraGold = parseInt(document.getElementById('extraGoldInput').value)||0;
-  goTo(9);
+  goTo(STEP.SHOPPING);
 }
 
 // ---------- STEP 8: SHOPPING (only if gold was chosen anywhere) ----------
@@ -2977,7 +2999,7 @@ function renderShoppingStep(){
   ];
 
   let html = `<div class="panel">
-    <h2>Schritt 8.5: Einkaufen</h2>
+    <h2>Schritt 9.5: Einkaufen</h2>
     <div class="gold-tracker">Budget: ${budget} GP &middot; Ausgegeben: ${spent.toFixed(2)} GP &middot; Übrig: <span style="${remaining<0?'color:#c0405f':''}">${remaining} GP</span></div>
     <div class="tabs">${cats.map((c)=>`<div class="tab-btn ${c.key===state.shoppingActiveTab?'active':''}" data-tab="${c.key}">${c.label}</div>`).join('')}</div>`;
 
@@ -2996,8 +3018,8 @@ function renderShoppingStep(){
   });
 
   html += `<div style="margin-top:16px;">
-      <button class="secondary" onclick="goTo(8)">← Zurück</button>
-      <button onclick="goTo(10)">Weiter →</button>
+      <button class="secondary" onclick="goTo(STEP.EQUIPMENT)">← Zurück</button>
+      <button onclick="goTo(STEP.SUMMARY)">Weiter →</button>
     </div></div>`;
   return html;
 }
@@ -4020,7 +4042,7 @@ function renderSummaryStep(){
       ${state.classes.length>1? '<p style="font-size:0.8em;color:var(--muted);">Hinweis: Weitere Multiclass-Klassen bringen keine zusätzliche Startausrüstung.</p>':''}
     </div>
     <div style="margin-top:20px;">
-      <button class="secondary" onclick="goTo(9)">← Zurück</button>
+      <button class="secondary" onclick="goTo(STEP.SHOPPING)">← Zurück</button>
       <button onclick="exportJSON()">📄 Als JSON herunterladen</button>
       <button onclick="exportDoc()">📝 Als Word-Datei (.docx) herunterladen</button>
       <button class="secondary" onclick="restart()">🔄 Neu beginnen</button>
