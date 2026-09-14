@@ -38,6 +38,10 @@
   h2{color:var(--accent2);font-size:1.3em;margin-top:0;}
   h3{color:var(--accent2);}
   .theme-toggle{display:flex;align-items:center;gap:6px;font-size:0.8em;color:var(--muted);white-space:nowrap;}
+  input[type=checkbox]{-webkit-appearance:none;appearance:none;width:20px;height:20px;min-width:20px;border:2px solid var(--border);border-radius:4px;background:var(--input-bg);display:inline-block;vertical-align:middle;position:relative;cursor:pointer;margin:0 6px 0 0;flex-shrink:0;}
+  input[type=checkbox]:checked{background:var(--accent);border-color:var(--accent);}
+  input[type=checkbox]:checked::after{content:"";position:absolute;left:5px;top:1px;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);}
+  input[type=checkbox]:disabled{opacity:0.4;cursor:not-allowed;}
   .switch{position:relative;display:inline-block;width:44px;height:24px;}
   .switch input{opacity:0;width:0;height:0;}
   .slider{position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background-color:var(--border);transition:.2s;border-radius:24px;}
@@ -77,6 +81,10 @@
   .ability-row label{margin:0;flex:0 0 140px;}
   .ability-row select,.ability-row input{width:100px;max-width:100px;}
   .summary-block{border-bottom:1px solid var(--border);padding:8px 0;}
+  .ability-grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:10px 14px;}
+  @media (max-width: 600px){ .ability-grid{grid-template-columns:repeat(2, 1fr);} }
+  @media (max-width: 400px){ .ability-grid{grid-template-columns:1fr;} }
+  .ability-card{border:1px solid var(--border);border-radius:6px;padding:8px 10px;}
   .summary-block h4{color:var(--accent2);margin:0 0 4px;}
   .choice-box{background:var(--input-bg);border:1px solid var(--accent);border-radius:6px;padding:12px 16px;margin:10px 0;}
   .choice-box h4{margin:0 0 8px;color:var(--accent);}
@@ -548,119 +556,124 @@ function resolveSpeciesSubChoiceDetails(){
   return html;
 }
 
-function renderSpeciesStep(){
-  let cards = alphaSort(DATA.species, sp=>sp.name).map(sp=>`
-    <div class="card ${state.speciesId===sp.id?'selected':''}" data-species="${sp.id}">
-      <h3>${sp.name}${sp.sourceTag?` <span class="badge" title="${sp.sourceBook||''}">${sp.sourceTag}</span>`:''}</h3>
-      <p>Größe: ${sp.size} &middot; Speed: ${sp.speed} ft</p>
-    </div>`).join('');
-  let info = '';
-  if(state.speciesId){
-    const sp = DATA.species.find(s=>s.id===state.speciesId);
-    info = `<div class="info-box"><b>${sp.name}${sp.sourceTag?` <span class="badge" title="${sp.sourceBook||''}">${sp.sourceTag}</span>`:''} – Traits:</b>` +
-      sp.traits.map(t=>`<div class="trait"><b>${t.name}:</b> ${t.desc}</div>`).join('') + `</div>`;
+function buildSpeciesInfoHtml(sp){
+  let info = `<div class="info-box"><b>${sp.name}${sp.sourceTag?` <span class="badge" title="${sp.sourceBook||''}">${sp.sourceTag}</span>`:''} – Traits:</b>` +
+    sp.traits.map(t=>`<div class="trait"><b>${t.name}:</b> ${t.desc}</div>`).join('') + `</div>`;
 
-    if(sp.subChoice){
-      const current = state.speciesSubChoice || '';
-      info += `<div class="choice-box"><h4>${sp.subChoice.label}</h4>
-        <select data-speciessub>
-          <option value="">--wählen--</option>
-          ${alphaSort(sp.subChoice.options).map(o=>`<option value="${o}" ${current===o?'selected':''}>${o}</option>`).join('')}
-        </select>
+  if(sp.subChoice){
+    const current = state.speciesSubChoice || '';
+    info += `<div class="choice-box"><h4>${sp.subChoice.label}</h4>
+      <select data-speciessub>
+        <option value="">--wählen--</option>
+        ${alphaSort(sp.subChoice.options).map(o=>`<option value="${o}" ${current===o?'selected':''}>${o}</option>`).join('')}
+      </select>
+      </div>`;
+    info += resolveSpeciesSubChoiceDetails();
+  }
+
+  if(sp.sizeChoice){
+    const current = state.speciesSizeChoice || '';
+    info += `<div class="choice-box"><h4>Größe wählen</h4>
+      <select data-speciessize>
+        <option value="">--wählen--</option>
+        <option value="Medium" ${current==='Medium'?'selected':''}>Medium</option>
+        <option value="Small" ${current==='Small'?'selected':''}>Small</option>
+      </select>
+      </div>`;
+  }
+
+  if(sp.abilityChoice){
+    const current = state.speciesAbilityChoice || '';
+    info += `<div class="choice-box"><h4>${sp.abilityChoice.label}</h4>
+      <select data-speciesability>
+        <option value="">--wählen--</option>
+        ${sp.abilityChoice.options.map(a=>`<option value="${a}" ${current===a?'selected':''}>${ABIL_DE[a]}</option>`).join('')}
+      </select>
+      </div>`;
+  }
+
+  if(sp.skillChoiceLimited){
+    const count = sp.skillChoiceLimited.count || 1;
+    if(count > 1){
+      if(!Array.isArray(state.speciesSkillChoice)) state.speciesSkillChoice = [];
+      setupDedupSelect('speciesskillmulti', count, state.speciesSkillChoice, null);
+      dedupRegistry['speciesskillmulti'].pool = sp.skillChoiceLimited.options;
+      info += `<div class="choice-box"><h4>${sp.skillChoiceLimited.label}</h4>
+        <div id="speciesskillmulti_container">${renderDedupSelects('speciesskillmulti', count, sp.skillChoiceLimited.options, state.speciesSkillChoice)}</div>
         </div>`;
-      info += resolveSpeciesSubChoiceDetails();
-    }
-
-    if(sp.sizeChoice){
-      const current = state.speciesSizeChoice || '';
-      info += `<div class="choice-box"><h4>Größe wählen</h4>
-        <select data-speciessize>
-          <option value="">--wählen--</option>
-          <option value="Medium" ${current==='Medium'?'selected':''}>Medium</option>
-          <option value="Small" ${current==='Small'?'selected':''}>Small</option>
-        </select>
-        </div>`;
-    }
-
-    if(sp.abilityChoice){
-      const current = state.speciesAbilityChoice || '';
-      info += `<div class="choice-box"><h4>${sp.abilityChoice.label}</h4>
-        <select data-speciesability>
-          <option value="">--wählen--</option>
-          ${sp.abilityChoice.options.map(a=>`<option value="${a}" ${current===a?'selected':''}>${ABIL_DE[a]}</option>`).join('')}
-        </select>
-        </div>`;
-    }
-
-    if(sp.skillChoiceLimited){
-      const count = sp.skillChoiceLimited.count || 1;
-      if(count > 1){
-        if(!Array.isArray(state.speciesSkillChoice)) state.speciesSkillChoice = [];
-        setupDedupSelect('speciesskillmulti', count, state.speciesSkillChoice, null);
-        dedupRegistry['speciesskillmulti'].pool = sp.skillChoiceLimited.options;
-        info += `<div class="choice-box"><h4>${sp.skillChoiceLimited.label}</h4>
-          <div id="speciesskillmulti_container">${renderDedupSelects('speciesskillmulti', count, sp.skillChoiceLimited.options, state.speciesSkillChoice)}</div>
-          </div>`;
-      } else {
-        const current = state.speciesSkillChoice || '';
-        info += `<div class="choice-box"><h4>${sp.skillChoiceLimited.label}</h4>
-          <select data-speciesskill>
-            <option value="">--wählen--</option>
-            ${sp.skillChoiceLimited.options.map(s=>`<option value="${s}" ${current===s?'selected':''}>${s}</option>`).join('')}
-          </select>
-          </div>`;
-      }
-    }
-
-    if(sp.skillChoiceFree){
+    } else {
       const current = state.speciesSkillChoice || '';
-      info += `<div class="choice-box"><h4>${sp.skillChoiceFree.label}</h4>
+      info += `<div class="choice-box"><h4>${sp.skillChoiceLimited.label}</h4>
         <select data-speciesskill>
           <option value="">--wählen--</option>
-          ${alphaSort(SKILLS).map(s=>`<option value="${s}" ${current===s?'selected':''}>${s}</option>`).join('')}
+          ${sp.skillChoiceLimited.options.map(s=>`<option value="${s}" ${current===s?'selected':''}>${s}</option>`).join('')}
         </select>
         </div>`;
-    }
-
-    if(sp.damageTypeChoice){
-      const current = state.speciesDamageTypeChoice || '';
-      info += `<div class="choice-box"><h4>${sp.damageTypeChoice.label}</h4>
-        <select data-speciesdmgtype>
-          <option value="">--wählen--</option>
-          ${sp.damageTypeChoice.options.map(d=>`<option value="${d}" ${current===d?'selected':''}>${d}</option>`).join('')}
-        </select>
-        </div>`;
-    }
-
-    if(sp.humanChoices){
-      const skillCurrent = state.speciesSkillChoice || '';
-      info += `<div class="choice-box"><h4>Skillful – Fertigkeit wählen</h4>
-        <select data-speciesskill>
-          <option value="">--wählen--</option>
-          ${alphaSort(SKILLS).map(s=>`<option value="${s}" ${skillCurrent===s?'selected':''}>${s}</option>`).join('')}
-        </select>
-        </div>`;
-
-      const featCurrent = (state.speciesExtraFeat && state.speciesExtraFeat.name) || '';
-      info += `<div class="choice-box"><h4>Versatile – zusätzlicher Origin Feat</h4>
-        <select data-speciesfeat>
-          <option value="">--wählen--</option>
-          ${alphaSort(DATA.feats_origin, f=>f.name).map(f=>`<option value="${f.name}" ${featCurrent===f.name?'selected':''}>${f.name} (Origin, ${f.sourceTag||'PHB'})</option>`).join('')}
-        </select>`;
-      if(featCurrent){
-        const featDef = DATA.feats_origin.find(f=>f.name===featCurrent);
-        info += `<div class="info-box">${sourceBadge(featDef)}${featDef.desc}</div>`;
-        if(!state.speciesExtraFeat.sub) state.speciesExtraFeat.sub = {};
-        info += `<div id="speciesFeatSubArea">${renderFeatSubChoiceUI(featDef, 'SPECIESFEAT', state.speciesExtraFeat.sub)}</div>`;
-      }
-      info += `</div>`;
     }
   }
+
+  if(sp.skillChoiceFree){
+    const current = state.speciesSkillChoice || '';
+    info += `<div class="choice-box"><h4>${sp.skillChoiceFree.label}</h4>
+      <select data-speciesskill>
+        <option value="">--wählen--</option>
+        ${alphaSort(SKILLS).map(s=>`<option value="${s}" ${current===s?'selected':''}>${s}</option>`).join('')}
+      </select>
+      </div>`;
+  }
+
+  if(sp.damageTypeChoice){
+    const current = state.speciesDamageTypeChoice || '';
+    info += `<div class="choice-box"><h4>${sp.damageTypeChoice.label}</h4>
+      <select data-speciesdmgtype>
+        <option value="">--wählen--</option>
+        ${sp.damageTypeChoice.options.map(d=>`<option value="${d}" ${current===d?'selected':''}>${d}</option>`).join('')}
+      </select>
+      </div>`;
+  }
+
+  if(sp.humanChoices){
+    const skillCurrent = state.speciesSkillChoice || '';
+    info += `<div class="choice-box"><h4>Skillful – Fertigkeit wählen</h4>
+      <select data-speciesskill>
+        <option value="">--wählen--</option>
+        ${alphaSort(SKILLS).map(s=>`<option value="${s}" ${skillCurrent===s?'selected':''}>${s}</option>`).join('')}
+      </select>
+      </div>`;
+
+    const featCurrent = (state.speciesExtraFeat && state.speciesExtraFeat.name) || '';
+    info += `<div class="choice-box"><h4>Versatile – zusätzlicher Origin Feat</h4>
+      <select data-speciesfeat>
+        <option value="">--wählen--</option>
+        ${alphaSort(DATA.feats_origin, f=>f.name).map(f=>`<option value="${f.name}" ${featCurrent===f.name?'selected':''}>${f.name} (Origin, ${f.sourceTag||'PHB'})</option>`).join('')}
+      </select>`;
+    if(featCurrent){
+      const featDef = DATA.feats_origin.find(f=>f.name===featCurrent);
+      info += `<div class="info-box">${sourceBadge(featDef)}${featDef.desc}</div>`;
+      if(!state.speciesExtraFeat.sub) state.speciesExtraFeat.sub = {};
+      info += `<div id="speciesFeatSubArea">${renderFeatSubChoiceUI(featDef, 'SPECIESFEAT', state.speciesExtraFeat.sub)}</div>`;
+    }
+    info += `</div>`;
+  }
+  return info;
+}
+function renderSpeciesStep(){
+  let cards = alphaSort(DATA.species, sp=>sp.name).map(sp=>{
+    const isSelected = state.speciesId===sp.id;
+    const card = `<div class="card ${isSelected?'selected':''}" data-species="${sp.id}">
+      <h3>${sp.name}${sp.sourceTag?` <span class="badge" title="${sp.sourceBook||''}">${sp.sourceTag}</span>`:''}</h3>
+      <p>Größe: ${sp.size} &middot; Speed: ${sp.speed} ft</p>
+    </div>`;
+    // Expanded details render immediately after the selected card, spanning the full grid width —
+    // an accordion-style in-place expansion instead of a separate block after the whole list,
+    // so the player doesn't have to scroll past every other option to reach their own choices.
+    const expanded = isSelected ? `<div style="grid-column:1/-1;">${buildSpeciesInfoHtml(sp)}</div>` : '';
+    return card + expanded;
+  }).join('');
   return `
   <div class="panel">
     <h2>Schritt 3: Volk (Species)</h2>
     <div class="grid">${cards}</div>
-    ${info}
     <div style="margin-top:16px;">
       <button class="secondary" onclick="goTo(STEP.ABILITIES)">← Zurück</button>
       <button onclick="nextFromSpecies()" ${!state.speciesId?'disabled':''}>Weiter →</button>
@@ -758,70 +771,71 @@ function resolveSkillPool(options, cdef){
   return options;
 }
 
+function buildClassExpandedHtml(c, idx){
+  const cdef = c;
+  const cl = state.classes[idx];
+  const isFirst = idx===0;
+  let html = `<div class="choice-box">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <b>${isFirst?'Startklasse':'Multiclass'}</b>
+      <label style="margin:0;">Level</label>
+      <input type="number" min="1" max="20" value="${cl.level}" data-levelidx="${idx}" style="width:70px;">
+      <button class="secondary small" data-removeidx="${idx}">Entfernen</button>
+    </div>
+  </div>`;
+
+  if(isFirst){
+    html += `<div class="info-box"><b>${cdef.name} (Startklasse, volles Level-1-Paket):</b>
+      Rüstung: ${cdef.level1Armor.join(', ')||'keine'} &middot; Waffen: ${cdef.level1Weapons.join(', ')} &middot;
+      Skills: ${cdef.level1SkillChoices? cdef.level1SkillChoices.count+' aus '+cdef.level1SkillChoices.options.join(', ') : '-'}
+      </div>`;
+  } else {
+    const mc = cdef.multiclass;
+    html += `<div class="info-box"><b>${cdef.name} (Multiclass, reduziertes Paket):</b>
+      Rüstung: ${mc.armor && mc.armor.length? mc.armor.join(', ') : 'keine'} &middot;
+      Waffen: ${mc.weapons && mc.weapons.length? mc.weapons.join(', ') : 'keine'} &middot;
+      Skills: ${mc.skills? mc.skills.count+' aus '+resolveSkillPool(mc.skills.options, cdef).join(', ') : 'keine zusätzlichen'}
+      ${mc.note? '<br><i>'+mc.note+'</i>':''}
+      </div>`;
+  }
+
+  const choiceInfo = isFirst ? cdef.level1SkillChoices : cdef.multiclass.skills;
+  if(choiceInfo){
+    const alreadyProf = (typeof skillsAlreadyProficientSoFar === 'function') ? skillsAlreadyProficientSoFar(cdef.id) : new Set();
+    const pool = alphaSort(resolveSkillPool(choiceInfo.options, cdef).filter(s => !alreadyProf.has(s)));
+    const current = state.classSkillChoices[cdef.id] || [];
+    html += `<div class="choice-box"><h4>${cdef.name} – Skill-Proficiencies (${choiceInfo.count} wählen)</h4>
+      <p style="font-size:0.78em;color:var(--muted);margin:2px 0;">Fertigkeiten, die du bereits (z.B. über dein Volk) hast, sind hier ausgeblendet.</p>
+      <div id="skillchoice_${cdef.id}_container">${renderDedupSelects('skillchoice_'+cdef.id, choiceInfo.count, pool, current)}</div>
+      </div>`;
+  }
+  return html;
+}
 function renderClassStep(){
   const used = totalClassLevels();
   const remaining = state.level - used;
   let classCards = alphaSort(DATA.classes, c=>c.name).map(c=>{
-    return `<div class="card" data-classadd="${c.id}">
+    const idx = state.classes.findIndex(cl=>cl.id===c.id);
+    const isSelected = idx !== -1;
+    const card = `<div class="card ${isSelected?'selected':''}" ${isSelected?'':`data-classadd="${c.id}"`}>
       <h3>${c.name}${c.sourceTag?` <span class="badge" title="${c.sourceBook||''}">${c.sourceTag}</span>`:''}</h3>
       <p>Primärattribut: ${c.primaryAbility.join(' / ')} &middot; Hit Die: d${c.hitDie}</p>
-      <p style="color:var(--muted)">Multiclass-Voraussetzung: ${checkPrereq(c.id)}</p>
+      ${isSelected?'':`<p style="color:var(--muted)">Multiclass-Voraussetzung: ${checkPrereq(c.id)}</p>`}
     </div>`;
+    // Accordion-style: the level input, proficiency info, and skill choices for THIS class expand
+    // in place right after its own card (full grid width), instead of in a separate list below —
+    // same pattern as Volk/Hintergrund. idx comes from state.classes (selection order), not the
+    // alphabetical grid position, so idx===0 always correctly means "first class chosen" (Startklasse).
+    const expanded = isSelected ? `<div style="grid-column:1/-1;">${buildClassExpandedHtml(c, idx)}</div>` : '';
+    return card + expanded;
   }).join('');
-
-  let rows = state.classes.map((cl,idx)=>{
-    const cdef = classDef(cl.id);
-    const isFirst = idx===0;
-    return `<div class="multiclass-row">
-      <b style="flex:0 0 140px;">${cdef.name}${isFirst?' (Startklasse)':' (Multiclass)'}</b>
-      <label style="margin:0;flex:0 0 60px;">Level</label>
-      <input type="number" min="1" max="20" value="${cl.level}" data-levelidx="${idx}">
-      <button class="secondary small" data-removeidx="${idx}">Entfernen</button>
-    </div>`;
-  }).join('');
-
-  let proficiencyInfo = state.classes.map((cl,idx)=>{
-    const cdef = classDef(cl.id);
-    if(idx===0){
-      return `<div class="info-box"><b>${cdef.name} (Startklasse, volles Level-1-Paket):</b>
-        Rüstung: ${cdef.level1Armor.join(', ')||'keine'} &middot; Waffen: ${cdef.level1Weapons.join(', ')} &middot;
-        Skills: ${cdef.level1SkillChoices? cdef.level1SkillChoices.count+' aus '+cdef.level1SkillChoices.options.join(', ') : '-'}
-        </div>`;
-    } else {
-      const mc = cdef.multiclass;
-      return `<div class="info-box"><b>${cdef.name} (Multiclass, reduziertes Paket):</b>
-        Rüstung: ${mc.armor && mc.armor.length? mc.armor.join(', ') : 'keine'} &middot;
-        Waffen: ${mc.weapons && mc.weapons.length? mc.weapons.join(', ') : 'keine'} &middot;
-        Skills: ${mc.skills? mc.skills.count+' aus '+resolveSkillPool(mc.skills.options, cdef).join(', ') : 'keine zusätzlichen'}
-        ${mc.note? '<br><i>'+mc.note+'</i>':''}
-        </div>`;
-    }
-  }).join('');
-
-  // Skill selection UI
-  let skillChoiceHtml = '';
-  state.classes.forEach((cl,idx)=>{
-    const cdef = classDef(cl.id);
-    const choiceInfo = idx===0 ? cdef.level1SkillChoices : cdef.multiclass.skills;
-    if(!choiceInfo) return;
-    const alreadyProf = (typeof skillsAlreadyProficientSoFar === 'function') ? skillsAlreadyProficientSoFar(cl.id) : new Set();
-    const pool = alphaSort(resolveSkillPool(choiceInfo.options, cdef).filter(s => !alreadyProf.has(s)));
-    const current = state.classSkillChoices[cl.id] || [];
-    skillChoiceHtml += `<div class="choice-box"><h4>${cdef.name} – Skill-Proficiencies (${choiceInfo.count} wählen)</h4>
-      <p style="font-size:0.78em;color:var(--muted);margin:2px 0;">Fertigkeiten, die du bereits (z.B. über dein Volk) hast, sind hier ausgeblendet.</p>
-      <div id="skillchoice_${cl.id}_container">${renderDedupSelects('skillchoice_'+cl.id, choiceInfo.count, pool, current)}</div>
-      </div>`;
-  });
 
   return `
   <div class="panel">
     <h2>Schritt 5: Klasse(n) – frei kombinierbares Multiclassing</h2>
     <p>Gesamtstufe: <b>${state.level}</b> &middot; bereits verteilt: <b>${used}</b> &middot; verbleibend: <b style="${remaining!==0?'color:#c0692f':'color:#3a8f3a'}">${remaining}</b></p>
-    ${rows || '<p style="color:var(--muted)">Noch keine Klasse gewählt.</p>'}
-    <h3 style="margin-top:20px;">Klasse hinzufügen</h3>
+    ${state.classes.length===0?'<p style="color:var(--muted)">Noch keine Klasse gewählt.</p>':''}
     <div class="grid">${classCards}</div>
-    ${proficiencyInfo}
-    ${skillChoiceHtml}
     <div style="margin-top:16px;">
       <button class="secondary" onclick="goTo(STEP.BACKGROUND)">← Zurück</button>
       <button onclick="nextFromClasses()" ${remaining!==0 || state.classes.length===0 ?'disabled':''}>Weiter →</button>
@@ -2608,104 +2622,115 @@ function renderCustomBackgroundForm(){
   return html;
 }
 
+function buildBackgroundDetailsHtml(){
+  if(state.backgroundId==='custom_background'){
+    return renderCustomBackgroundForm();
+  }
+  let details = '';
+  const b = getSelectedBackground();
+  const priorSkills = new Set();
+  if(state.speciesSkillChoice) priorSkills.add(state.speciesSkillChoice);
+  Object.values(state.classSkillChoices).forEach(arr=>(arr||[]).forEach(s=>priorSkills.add(s)));
+  const overlap = b.skills.filter(s => priorSkills.has(s));
+  details = `<div class="info-box">
+    <b>${b.name}</b><br>
+    ${b.flavor?`<p style="font-style:italic;color:var(--muted);margin:4px 0 8px;">${b.flavor}</p>`:''}
+    <b>Skills:</b> ${b.skills.join(', ')}<br>
+    <b>Werkzeug:</b> ${resolvedBackgroundTool(b)}<br>
+    <b>Feat:</b> ${b.feat}<br>
+    <b>Ausrüstung:</b> ${b.equipment}
+    </div>`;
+  if(overlap.length){
+    details += `<p class="warn">Hinweis: ${overlap.join(', ')} hast du bereits durch Volk/Klasse. Der Hintergrund-Skill ist fest vorgegeben und lässt sich nicht tauschen – sprich das ggf. mit deinem DM ab (z.B. Ersatzfertigkeit oder Expertise stattdessen).</p>`;
+  }
+
+  // Mist Wanderer / Spirit Medium: PHB text only offers a Dark Gift feat here, which we don't
+  // otherwise implement (bound to the Ravenloft campaign). Controlled by the global "andere
+  // Welten"-Checkbox at the top of this step: off (default) => normal Origin Feat picker;
+  // on => the book's recommended Dark Gift applies automatically, no extra picker needed.
+  const rawBg = DATA.backgrounds.find(x=>x.id===state.backgroundId);
+  if(rawBg && rawBg.featIsDarkGiftDefault){
+    if(state.allowOtherSettingContent){
+      details += `<div class="choice-box">
+        <h4>Feat: ${rawBg.feat} (Dark Gift)</h4>
+        <p style="font-size:0.85em;color:var(--muted);">${rawBg.featDarkGiftDesc}</p>
+      </div>`;
+    } else {
+      const overrideCurrent = state.darkGiftOverrideFeat || '';
+      details += `<div class="choice-box">
+        <h4>Feat: normaler Origin Feat statt Dark Gift</h4>
+        <p style="font-size:0.85em;color:var(--muted);">Die Checkbox oben ("andere Welten") ist aus, daher gilt hier ein normaler Origin Feat statt ${rawBg.feat} (Dark Gift).</p>
+        <select data-darkgiftoverridefeat>
+          <option value="">--Origin Feat wählen--</option>
+          ${alphaSort(DATA.feats_origin, f=>f.name).map(f=>`<option value="${f.name}" ${overrideCurrent===f.name?'selected':''}>${f.name} (${f.sourceTag||'PHB'})</option>`).join('')}
+        </select>
+      </div>`;
+    }
+  }
+
+  // Tool proficiency choice, if the background's tool is a category placeholder like "Gaming Set (Wahl)"
+  if(b.tool.includes('(Wahl)')){
+    const toolPool = backgroundToolPool(b.tool);
+    details += `<div class="choice-box"><h4>Werkzeug wählen</h4>
+      <select data-bgtool>
+        <option value="">--wählen--</option>
+        ${alphaSort(toolPool||[]).map(t=>`<option value="${t}" ${state.backgroundToolChoice===t?'selected':''}>${t}</option>`).join('')}
+      </select>
+      </div>`;
+  }
+
+  // Ability score allocation
+  details += `<div class="choice-box"><h4>Attributspunkte verteilen</h4>
+    <p style="font-size:0.85em;color:var(--muted);">Wähle aus: ${b.abilityScores.join(', ')}</p>
+    <div>
+      <button class="small ${state.backgroundAbilityMode==='plus2plus1'?'':'secondary'}" data-bgmode="plus2plus1">+2 / +1 auf zwei Attribute</button>
+      <button class="small ${state.backgroundAbilityMode==='plus1all'?'':'secondary'}" data-bgmode="plus1all">+1 auf alle drei Attribute</button>
+    </div>
+    <div id="bgAbilityPicksArea">${renderBgAbilityPicks(b)}</div>
+    </div>`;
+
+  // Feat sub-choice if applicable
+  const featDef = findFeatDef(b.feat);
+  if(featDef && featDef.choice){
+    const forcedClass = getBackgroundFeatForcedClass(b);
+    state.backgroundFeatSubChoice = state.backgroundFeatSubChoice || {};
+    if(forcedClass && !state.backgroundFeatSubChoice.magicClass){
+      state.backgroundFeatSubChoice.magicClass = forcedClass;
+    }
+    details += `<div class="choice-box"><h4>Feat-Unterauswahl: ${b.feat}</h4>
+      <p style="font-size:0.85em;color:var(--muted);">${sourceBadge(featDef)}${featDef.desc}</p>
+      <div id="bgFeatSubArea">${renderFeatSubChoiceUI(featDef, 'BGFEAT', state.backgroundFeatSubChoice, forcedClass)}</div>
+      </div>`;
+  }
+
+  // Expertise (Rogue/Bard): needs the full skill list (class + background), so it's placed here
+  // once the background's skills are also known.
+  details += renderExpertiseSection();
+  return details;
+}
 function renderBackgroundStep(){
   const visibleBackgrounds = DATA.backgrounds.filter(b => !b.settingLocked || state.allowOtherSettingContent);
-  let cards = alphaSort(visibleBackgrounds, b=>b.name).map(b=>`
-    <div class="card ${state.backgroundId===b.id?'selected':''}" data-bg="${b.id}">
+  let cards = alphaSort(visibleBackgrounds, b=>b.name).map(b=>{
+    const isSelected = state.backgroundId===b.id;
+    const card = `<div class="card ${isSelected?'selected':''}" data-bg="${b.id}">
       <h3>${b.name}${b.sourceTag?` <span class="badge" title="${b.sourceBook||''}">${b.sourceTag}</span>`:''}</h3>
       <p>Skills: ${b.skills.join(', ')}</p>
       <p style="color:var(--muted);">Attribute: ${b.abilityScores.map(a=>ABIL_DE[a]).join(', ')}</p>
-    </div>`).join('');
+    </div>`;
+    // Accordion-style: expand in place right after the selected card (full grid width), instead of
+    // appending the details after the entire card list — matches the Species-step pattern.
+    const expanded = isSelected ? `<div style="grid-column:1/-1;">${buildBackgroundDetailsHtml()}</div>` : '';
+    return card + expanded;
+  }).join('');
+  const customSelected = state.backgroundId==='custom_background';
   cards += `
-    <div class="card ${state.backgroundId==='custom_background'?'selected':''}" data-bg="custom_background">
+    <div class="card ${customSelected?'selected':''}" data-bg="custom_background">
       <h3>Eigener Hintergrund <span class="badge" title="DMG 2024, Creating a Background">Eigen</span></h3>
       <p>Frei wählbar: Name, 3 Attribute, 2 Skills, 1 Werkzeug, 1 Origin Feat</p>
       <p style="color:var(--muted);">Nach DMG-2024-Regeln ("Creating a Background")</p>
     </div>`;
-
-  let details = '';
-  if(state.backgroundId==='custom_background'){
-    details = renderCustomBackgroundForm();
-  } else if(state.backgroundId){
-    const b = getSelectedBackground();
-    const priorSkills = new Set();
-    if(state.speciesSkillChoice) priorSkills.add(state.speciesSkillChoice);
-    Object.values(state.classSkillChoices).forEach(arr=>(arr||[]).forEach(s=>priorSkills.add(s)));
-    const overlap = b.skills.filter(s => priorSkills.has(s));
-    details = `<div class="info-box">
-      <b>${b.name}</b><br>
-      ${b.flavor?`<p style="font-style:italic;color:var(--muted);margin:4px 0 8px;">${b.flavor}</p>`:''}
-      <b>Skills:</b> ${b.skills.join(', ')}<br>
-      <b>Werkzeug:</b> ${resolvedBackgroundTool(b)}<br>
-      <b>Feat:</b> ${b.feat}<br>
-      <b>Ausrüstung:</b> ${b.equipment}
-      </div>`;
-    if(overlap.length){
-      details += `<p class="warn">Hinweis: ${overlap.join(', ')} hast du bereits durch Volk/Klasse. Der Hintergrund-Skill ist fest vorgegeben und lässt sich nicht tauschen – sprich das ggf. mit deinem DM ab (z.B. Ersatzfertigkeit oder Expertise stattdessen).</p>`;
-    }
-
-    // Mist Wanderer / Spirit Medium: PHB text only offers a Dark Gift feat here, which we don't
-    // otherwise implement (bound to the Ravenloft campaign). Controlled by the global "andere
-    // Welten"-Checkbox at the top of this step: off (default) => normal Origin Feat picker;
-    // on => the book's recommended Dark Gift applies automatically, no extra picker needed.
-    const rawBg = DATA.backgrounds.find(x=>x.id===state.backgroundId);
-    if(rawBg && rawBg.featIsDarkGiftDefault){
-      if(state.allowOtherSettingContent){
-        details += `<div class="choice-box">
-          <h4>Feat: ${rawBg.feat} (Dark Gift)</h4>
-          <p style="font-size:0.85em;color:var(--muted);">${rawBg.featDarkGiftDesc}</p>
-        </div>`;
-      } else {
-        const overrideCurrent = state.darkGiftOverrideFeat || '';
-        details += `<div class="choice-box">
-          <h4>Feat: normaler Origin Feat statt Dark Gift</h4>
-          <p style="font-size:0.85em;color:var(--muted);">Die Checkbox oben ("andere Welten") ist aus, daher gilt hier ein normaler Origin Feat statt ${rawBg.feat} (Dark Gift).</p>
-          <select data-darkgiftoverridefeat>
-            <option value="">--Origin Feat wählen--</option>
-            ${alphaSort(DATA.feats_origin, f=>f.name).map(f=>`<option value="${f.name}" ${overrideCurrent===f.name?'selected':''}>${f.name} (${f.sourceTag||'PHB'})</option>`).join('')}
-          </select>
-        </div>`;
-      }
-    }
-
-    // Tool proficiency choice, if the background's tool is a category placeholder like "Gaming Set (Wahl)"
-    if(b.tool.includes('(Wahl)')){
-      const toolPool = backgroundToolPool(b.tool);
-      details += `<div class="choice-box"><h4>Werkzeug wählen</h4>
-        <select data-bgtool>
-          <option value="">--wählen--</option>
-          ${alphaSort(toolPool||[]).map(t=>`<option value="${t}" ${state.backgroundToolChoice===t?'selected':''}>${t}</option>`).join('')}
-        </select>
-        </div>`;
-    }
-
-    // Ability score allocation
-    details += `<div class="choice-box"><h4>Attributspunkte verteilen</h4>
-      <p style="font-size:0.85em;color:var(--muted);">Wähle aus: ${b.abilityScores.join(', ')}</p>
-      <div>
-        <button class="small ${state.backgroundAbilityMode==='plus2plus1'?'':'secondary'}" data-bgmode="plus2plus1">+2 / +1 auf zwei Attribute</button>
-        <button class="small ${state.backgroundAbilityMode==='plus1all'?'':'secondary'}" data-bgmode="plus1all">+1 auf alle drei Attribute</button>
-      </div>
-      <div id="bgAbilityPicksArea">${renderBgAbilityPicks(b)}</div>
-      </div>`;
-
-    // Feat sub-choice if applicable
-    const featDef = findFeatDef(b.feat);
-    if(featDef && featDef.choice){
-      const forcedClass = getBackgroundFeatForcedClass(b);
-      state.backgroundFeatSubChoice = state.backgroundFeatSubChoice || {};
-      if(forcedClass && !state.backgroundFeatSubChoice.magicClass){
-        state.backgroundFeatSubChoice.magicClass = forcedClass;
-      }
-      details += `<div class="choice-box"><h4>Feat-Unterauswahl: ${b.feat}</h4>
-        <p style="font-size:0.85em;color:var(--muted);">${sourceBadge(featDef)}${featDef.desc}</p>
-        <div id="bgFeatSubArea">${renderFeatSubChoiceUI(featDef, 'BGFEAT', state.backgroundFeatSubChoice, forcedClass)}</div>
-        </div>`;
-    }
-
-    // Expertise (Rogue/Bard): needs the full skill list (class + background), so it's placed here
-    // once the background's skills are also known.
-    details += renderExpertiseSection();
+  if(customSelected){
+    cards += `<div style="grid-column:1/-1;">${buildBackgroundDetailsHtml()}</div>`;
   }
 
   return `
@@ -2713,7 +2738,6 @@ function renderBackgroundStep(){
     <h2>Schritt 4: Hintergrund (Background)</h2>
     <p style="color:var(--muted);font-size:0.85em;margin-bottom:12px;">${state.allowOtherSettingContent? 'Setting-gebundene Inhalte (Eberron/Ravenloft) sind sichtbar – Einstellung auf Schritt 1 änderbar.' : 'Setting-gebundene Inhalte (Eberron/Ravenloft) sind ausgeblendet – Einstellung auf Schritt 1 änderbar.'}</p>
     <div class="grid">${cards}</div>
-    ${details}
     <div style="margin-top:16px;">
       <button class="secondary" onclick="goTo(STEP.SPECIES)">← Zurück</button>
       <button onclick="nextFromBackground()">Weiter →</button>
@@ -3948,11 +3972,31 @@ function renderSummaryStep(){
       </div>`;
   }).join('');
 
-  const abilityBlock = ABILITIES.map(a=>{
-    return `<div class="summary-block" style="display:inline-block;width:48%;">
-      <b>${ABIL_DE[a]}:</b> ${finalScores[a]} (${modStr(finalScores[a])})
+  // Character-sheet-style grouping: for each ability, show its score/mod/save first, then the
+  // skills tied to that ability directly underneath — replacing the previously separate
+  // Rettungswürfe/Fertigkeiten/Attribute blocks with one combined, per-ability view.
+  const expertiseSetForGrouping = computeExpertiseSkills();
+  const savingThrowsForGrouping = computeSavingThrows(finalScores, pb);
+  const SKILLS_BY_ABILITY_SUMMARY = {};
+  SKILLS.forEach(sk=>{ const a=SKILL_ABILITY[sk]; (SKILLS_BY_ABILITY_SUMMARY[a]=SKILLS_BY_ABILITY_SUMMARY[a]||[]).push(sk); });
+  const abilityGroupedBlock = '<div class="ability-grid">' + ABILITIES.map(a=>{
+    const abilMod = mod(finalScores[a]);
+    const saveEntry = savingThrowsForGrouping.find(s=>s.ability===a);
+    const isSaveProf = saveEntry && saveEntry.isProf;
+    const saveTotal = saveEntry ? saveEntry.total : abilMod;
+    const skillLines = (SKILLS_BY_ABILITY_SUMMARY[a]||[]).map(sk=>{
+      const isProf = allSkills.includes(sk);
+      const isExp = isProf && expertiseSetForGrouping.has(sk);
+      const bonus = isExp ? pb*2 : (isProf?pb:0);
+      return `<div>${isExp?'◆':(isProf?'●':'○')} ${sk}: ${signed(abilMod+bonus)}</div>`;
+    }).join('');
+    return `<div class="ability-card">
+      <h4 style="margin:0 0 4px;">${ABIL_DE[a]}</h4>
+      ${finalScores[a]} (${signed(abilMod)})<br>
+      ${isSaveProf?'●':'○'} Rettungswurf: ${signed(saveTotal)}
+      <div style="margin-top:6px;font-size:0.92em;">${skillLines || '<span style="color:var(--muted);">– keine Fertigkeiten –</span>'}</div>
       </div>`;
-  }).join('');
+  }).join('') + '</div>';
 
   const bgFeatDesc = (()=>{
     const featDef = findFeatDef(bg.feat);
@@ -3995,9 +4039,9 @@ function renderSummaryStep(){
       <b>Werkzeuge/Sprachen:</b> ${[resolvedBackgroundTool(bg), ...computeExtraToolProficiencies()].filter(Boolean).join(', ') || '–'}
     </div>
     <div class="summary-block">
-      <h4>Rettungswürfe</h4>
-      ${computeSavingThrows(finalScores, pb).map(s=>`${s.isProf?'●':''} ${ABIL_DE[s.ability]}: ${signed(s.total)}`).join(' &middot; ')}
-      <p style="font-size:0.78em;color:var(--muted);">Proficiency (●) nur aus der Startklasse, wie im Regelwerk vorgesehen.</p>
+      <h4>Attribute</h4>
+      <p style="font-size:0.8em;color:var(--muted);">● = Proficiency, ◆ = Expertise (doppelter Proficiency Bonus).</p>
+      ${abilityGroupedBlock}
     </div>
     ${(()=>{
       const res = computeClassResources();
@@ -4007,12 +4051,6 @@ function renderSummaryStep(){
         ${res.map(r=>`<div style="margin-bottom:4px;"><b>${r.label}:</b> ${r.value} <span style="font-size:0.78em;color:var(--muted);">(${r.formula} &middot; Regeneration: ${r.recharge})</span></div>`).join('')}
       </div>`;
     })()}
-    <div class="summary-block">
-      <h4>Fertigkeiten (Skills)</h4>
-      <p style="font-size:0.8em;color:var(--muted);">● = Proficiency, ◆ = Expertise (doppelter Proficiency Bonus). Gesamt = Attributsmodifikator + Proficiency Bonus.</p>
-      ${renderSkillTableHtml(finalScores, allSkills, pb, computeExpertiseSkills())}
-    </div>
-    <div class="summary-block"><h4>Attribute (final, inkl. ASI/Feats/Background)</h4>${abilityBlock}</div>
     <div class="summary-block">
       <h4>Volk-Traits${pageRefSuffix(sp)}</h4>
       ${renderSpeciesTraitsForSummary(sp)}
