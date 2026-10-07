@@ -1148,7 +1148,8 @@
         "Trickery Domain",
         "War Domain",
         "Knowledge Domain",
-        "Grave Domain"
+        "Grave Domain",
+        "Arcana Domain"
       ],
       "keyFeaturesByLevel": {
         "1": [
@@ -1328,6 +1329,26 @@
             "Dispel Evil and Good",
             "Raise Dead"
           ]
+        },
+        "Arcana Domain": {
+          "3": [
+            "Detect Magic",
+            "Magic Missile",
+            "Magic Weapon",
+            "Nystul's Magic Aura"
+          ],
+          "5": [
+            "Counterspell",
+            "Dispel Magic"
+          ],
+          "7": [
+            "Arcane Eye",
+            "Leomund's Secret Chest"
+          ],
+          "9": [
+            "Bigby's Hand",
+            "Teleportation Circle"
+          ]
         }
       },
       "divineOrderChoice": true,
@@ -1399,11 +1420,64 @@
           "sourceTag": "Rav",
           "sourceBook": "Ravenloft: The Horrors Within",
           "note": "Stufe 3 – Circle of Mortality: Pull of Death (1x/Zug, +1d4 Necrotic-Schaden gegen bereits verwundete Kreaturen bei Zauber-/Angriffstreffer, steigt auf 1d6 ab Stufe 11); Return to Life (Spare the Dying als Bonus Action; Heilwürfel bei 0-HP-Kreaturen zeigen immer den Maximalwert statt zu würfeln). Stufe 3 – Path to the Grave: Bonus Action, Channel-Divinity-Nutzung, Kreatur binnen 30ft verflucht (Disadvantage auf Angriffe/Saves bis zu deinem nächsten Zug); bei Trefferwurf gegen die verfluchte Kreatur kann der Fluch vorzeitig beendet werden für +Necrotic/Radiant-Schaden (deine Wahl) = Cleric-Level. Stufe 6 – Sentinel at Death's Door: Reaction, wenn du oder eine sichtbare Bloodied-Kreatur binnen 60ft von einem Angriff getroffen wird: Schaden halbieren (abgerundet); war der Treffer ein Critical Hit, werden dessen Krit-Effekte aufgehoben. Nutzungen = WIS-Mod (min. 1)/Long Rest. Stufe 17 – Divine Reaper: Enhanced Necromancy (Channel-Divinity-Nutzung: Necromancy-Zauber Grad 5- oder Grave-Domain-Zauber auf 2. Ziel ausweiten); Keeper of Souls (stirbt ein Gegner binnen 60ft, heilst du oder ein Verbündeter binnen 60ft um 2×Cleric-Level HP, 1x/Short-o.-Long-Rest oder Grad-6+-Slot)."
+        },
+        "Arcana Domain": {
+          "sourceTag": "AU",
+          "sourceBook": "Arcana Unleashed",
+          "choices": [
+            {
+              "level": 3,
+              "label": "Student of Arcana – Skill-Proficiency",
+              "options": [
+                "Arcana",
+                "History",
+                "Insight",
+                "Medicine",
+                "Persuasion",
+                "Religion"
+              ]
+            }
+          ],
+          "extraSpellChoices": [
+            {
+              "level": 3,
+              "label": "Student of Arcana – Wizard-Zaubertricks",
+              "classList": "wizard",
+              "grade": 0,
+              "count": 2,
+              "hint": "Zusätzlich zu deinen Cleric-Zaubertricks. Bei jedem Cleric-Stufenaufstieg darf einer gegen einen anderen Wizard-Zaubertrick getauscht werden.",
+              "status": "Zusätzlicher Zaubertrick (Subklasse)"
+            }
+          ],
+          "note": "Arcana Domain Spells (Stufe 3/5/7/9): immer vorbereitet (siehe Zauberliste). Modify Magic (Stufe 3, Channel Divinity, ohne Aktion beim Wirken eines Zaubers): Fortifying Spell – ein Ziel des Zaubers erhält 2d8 + Cleric-Stufe Temporary HP; oder Tenacious Spell – bei einem Zauber mit Rettungswurf: schafft eine sichtbare Kreatur den Save, 1d6 würfeln und vom ersten Rettungswurf des Ziels gegen den Effekt abziehen. Student of Arcana (Stufe 3): Proficiency in Arcana oder einem Cleric-Stufe-1-Skill + 2 Wizard-Zaubertricks (Auswahl oben). Dispelling Recovery (Stufe 6): direkt nachdem du mit einem Spell Slot einen Zauber wirkst, der HP wiederherstellt oder einen Zustand beendet, kannst du als Teil derselben Action/Bonus Action/Reaction Dispel Magic ohne Slot wirken; 1x pro Short/Long Rest, alternativ durch Ausgeben einer Channel-Divinity-Nutzung wiederherstellbar. Magical Mastery (Stufe 17): 4 Wizard-Zauber (je einer Grad 6, 7, 8, 9), immer vorbereitet, bei Cleric-Stufenaufstieg austauschbar – im Generator nicht auswählbar (Grad 4+ nicht in der Datenbank), bitte manuell auf dem Bogen eintragen.",
+          "featurePages": [
+            {
+              "name": "Arcana Domain Spells",
+              "pageRef": 12
+            },
+            {
+              "name": "Modify Magic",
+              "pageRef": 12
+            },
+            {
+              "name": "Student of Arcana",
+              "pageRef": 12
+            },
+            {
+              "name": "Dispelling Recovery",
+              "pageRef": 13
+            },
+            {
+              "name": "Magical Mastery",
+              "pageRef": 13
+            }
+          ]
         }
       },
       "subclassSourceTags": {
         "Knowledge Domain": "HoF",
-        "Grave Domain": "Rav"
+        "Grave Domain": "Rav",
+        "Arcana Domain": "AU"
       },
       "pageRef": 68,
       "subclassPageRefs": {
@@ -1412,7 +1486,8 @@
         "Trickery Domain": 75,
         "War Domain": 76,
         "Knowledge Domain": 18,
-        "Grave Domain": 19
+        "Grave Domain": 19,
+        "Arcana Domain": 12
       },
       "keyFeaturesPageRefByLevel": {
         "1": 70,
@@ -1759,7 +1834,8 @@
         "Champion",
         "Eldritch Knight",
         "Psi Warrior",
-        "Banneret"
+        "Banneret",
+        "Arcane Archer"
       ],
       "keyFeaturesByLevel": {
         "1": [
@@ -1976,10 +2052,92 @@
               "pageRef": 20
             }
           ]
+        },
+        "Arcane Archer": {
+          "sourceTag": "AU",
+          "sourceBook": "Arcana Unleashed",
+          "maneuverLevels": {
+            "3": 2,
+            "7": 1,
+            "10": 1,
+            "15": 1,
+            "18": 1
+          },
+          "maneuverPool": "arcaneShotOptions",
+          "maneuverLabel": "Arcane Shot Options",
+          "maneuverHint": "Jedes Mal, wenn du eine neue Option lernst, darfst du zusätzlich eine bekannte gegen eine andere tauschen.",
+          "fixedSkills": {
+            "level": 3,
+            "skills": [
+              "Arcana",
+              "Nature"
+            ],
+            "label": "Arcane Archer Lore",
+            "replacementPool": [
+              "Acrobatics",
+              "Animal Handling",
+              "Athletics",
+              "History",
+              "Insight",
+              "Intimidation",
+              "Perception",
+              "Survival"
+            ]
+          },
+          "extraSpellChoices": [
+            {
+              "level": 3,
+              "label": "Arcane Archer Lore – Zaubertrick",
+              "options": [
+                "Druidcraft (Transmutation)",
+                "Prestidigitation (Transmutation)"
+              ],
+              "grade": 0,
+              "count": 1,
+              "hint": "Druidcraft oder Prestidigitation – Intelligence ist dein Spellcasting-Attribut dafür.",
+              "status": "Zaubertrick (Subklasse, INT)"
+            }
+          ],
+          "note": "Arcane Archer Lore (Stufe 3): Druidcraft oder Prestidigitation (INT, Auswahl oben) + Proficiency in Arcana und Nature; bereits vorhandene davon werden durch Fighter-Stufe-1-Skills ersetzt (Auswahl oben). Arcane Shot (Stufe 3): 1x pro Zug bei Fernkampfangriff mit Waffe mit Ammunition-Property eine Option anwenden (Entscheidung nach Treffer und Schaden, außer die Option braucht keinen Angriffswurf). Nutzungen = INT-Mod (min. 1), Rückgewinnung bei Short/Long Rest. Arcane Shot Die: d6, d8 ab Stufe 10, d10 ab 15, d12 ab 18. Save-DC = 8 + INT-Mod + Proficiency Bonus. Optionen: 2 auf Stufe 3, je +1 auf Stufe 7, 10, 15, 18. Curving Shot (Stufe 7): nach verfehltem Fernkampfangriff (Ammunition) als Bonus Action neuer Angriffswurf gegen sichtbare Kreatur in Waffenreichweite und innerhalb 60 ft vom ursprünglichen Ziel. Magical Ammunition (Stufe 7, Magic Action, 1x pro Short/Long Rest oder durch Second Wind wiederherstellbar): nichtmagische Munition auf eine Fläche schießen – Darkening (15-ft-Emanation magischer Schatten 1 Min., löscht nichtmagische Flammen, -5 auf WIS(Perception) und Passive Perception), Unlocking (15-ft-Emanation öffnet nichtmagische Schlösser/Verklemmtes, Klopfen hörbar 300 ft) oder Vine (120 ft lange kletterbare Ranke für 10 Min.). Ever-Ready Shot (Stufe 10): bei Initiative 1 verbrauchte Arcane-Shot-Nutzung zurück. Indomitable Teleport (Stufe 15): nach erfolgreichem Save mit Indomitable bis 60 ft teleportieren. Masterful Shots (Stufe 18): Reaction, wenn dich eine sichtbare Kreatur verfehlt – halbe Speed wegbewegen ohne Opportunity Attacks, danach Fernkampfangriff gegen den Angreifer (falls in Reichweite).",
+          "featurePages": [
+            {
+              "name": "Arcane Archer Lore",
+              "pageRef": 13
+            },
+            {
+              "name": "Arcane Shot",
+              "pageRef": 13
+            },
+            {
+              "name": "Curving Shot",
+              "pageRef": 14
+            },
+            {
+              "name": "Magical Ammunition",
+              "pageRef": 14
+            },
+            {
+              "name": "Ever-Ready Shot",
+              "pageRef": 14
+            },
+            {
+              "name": "Indomitable Teleport",
+              "pageRef": 14
+            },
+            {
+              "name": "Masterful Shots",
+              "pageRef": 14
+            },
+            {
+              "name": "Arcane Shot Options",
+              "pageRef": 14
+            }
+          ]
         }
       },
       "subclassSourceTags": {
-        "Banneret": "HoF"
+        "Banneret": "HoF",
+        "Arcane Archer": "AU"
       },
       "pageRef": 91,
       "subclassPageRefs": {
@@ -1987,7 +2145,8 @@
         "Champion": 96,
         "Eldritch Knight": 96,
         "Psi Warrior": 98,
-        "Banneret": 19
+        "Banneret": 19,
+        "Arcane Archer": 13
       },
       "keyFeaturesPageRefByLevel": {
         "1": 91,
@@ -2061,7 +2220,8 @@
         "Warrior of Mercy",
         "Warrior of Shadow",
         "Warrior of the Elements",
-        "Warrior of the Open Hand"
+        "Warrior of the Open Hand",
+        "Warrior of the Mystic Arts"
       ],
       "keyFeaturesByLevel": {
         "1": [
@@ -2193,6 +2353,187 @@
         },
         "Warrior of the Open Hand": {
           "note": "Rein passive Fähigkeiten (Open Hand Technique, Wholeness of Body, Quivering Palm). Keine weitere Auswahl nötig."
+        },
+        "Warrior of the Mystic Arts": {
+          "sourceTag": "AU",
+          "sourceBook": "Arcana Unleashed",
+          "spellList": "sorcerer",
+          "spellAbility": "Wisdom",
+          "spellTable": {
+            "3": {
+              "cantrips": 2,
+              "prepared": 3,
+              "slots": [
+                2
+              ]
+            },
+            "4": {
+              "cantrips": 2,
+              "prepared": 4,
+              "slots": [
+                3
+              ]
+            },
+            "5": {
+              "cantrips": 2,
+              "prepared": 4,
+              "slots": [
+                3
+              ]
+            },
+            "6": {
+              "cantrips": 2,
+              "prepared": 4,
+              "slots": [
+                3
+              ]
+            },
+            "7": {
+              "cantrips": 2,
+              "prepared": 5,
+              "slots": [
+                4,
+                2
+              ]
+            },
+            "8": {
+              "cantrips": 2,
+              "prepared": 6,
+              "slots": [
+                4,
+                2
+              ]
+            },
+            "9": {
+              "cantrips": 2,
+              "prepared": 6,
+              "slots": [
+                4,
+                2
+              ]
+            },
+            "10": {
+              "cantrips": 3,
+              "prepared": 7,
+              "slots": [
+                4,
+                3
+              ]
+            },
+            "11": {
+              "cantrips": 3,
+              "prepared": 8,
+              "slots": [
+                4,
+                3
+              ]
+            },
+            "12": {
+              "cantrips": 3,
+              "prepared": 8,
+              "slots": [
+                4,
+                3
+              ]
+            },
+            "13": {
+              "cantrips": 3,
+              "prepared": 9,
+              "slots": [
+                4,
+                3,
+                2
+              ]
+            },
+            "14": {
+              "cantrips": 3,
+              "prepared": 10,
+              "slots": [
+                4,
+                3,
+                2
+              ]
+            },
+            "15": {
+              "cantrips": 3,
+              "prepared": 10,
+              "slots": [
+                4,
+                3,
+                2
+              ]
+            },
+            "16": {
+              "cantrips": 3,
+              "prepared": 11,
+              "slots": [
+                4,
+                3,
+                3
+              ]
+            },
+            "17": {
+              "cantrips": 3,
+              "prepared": 11,
+              "slots": [
+                4,
+                3,
+                3
+              ]
+            },
+            "18": {
+              "cantrips": 3,
+              "prepared": 11,
+              "slots": [
+                4,
+                3,
+                3
+              ]
+            },
+            "19": {
+              "cantrips": 3,
+              "prepared": 12,
+              "slots": [
+                4,
+                3,
+                3,
+                1
+              ]
+            },
+            "20": {
+              "cantrips": 3,
+              "prepared": 13,
+              "slots": [
+                4,
+                3,
+                3,
+                1
+              ]
+            }
+          },
+          "note": "Spellcasting (Stufe 3): Sorcerer-Zauberliste, Wisdom als Zauberattribut, Arcane Focus als Spellcasting Focus. Zaubertricks: 2 (empfohlen Blade Ward, Thunderclap), 3 ab Monk-Stufe 10; bei jedem Monk-Stufenaufstieg 1 tauschbar. Vorbereitete Zauber laut Warrior-of-the-Mystic-Arts-Spellcasting-Tabelle (Start: 3 Grad-1-Zauber, empfohlen Jump, Magic Missile, Shield); bei jedem Monk-Stufenaufstieg 1 Zauber tauschbar. Spell Slots: Grad 1 ab Stufe 3, Grad 2 ab 7, Grad 3 ab 13, Grad 4 ab 19 (Rückgewinnung bei Long Rest). Multiclassing: 1/3 der Monk-Stufen (abgerundet) zählt für die Spell Slots. Mystic Fighting Style (Stufe 6): bei der Attack Action einen Unarmed Strike durch einen Sorcerer-Zaubertrick (Castingzeit Action) ersetzen. Mystic Focus (Stufe 6): Spell Slot ausgeben → Focus Points in Höhe des Slot-Grades zurück (ohne Aktion); nach Short Rest oder Uncanny Metabolism Focus Points in einen verbrauchten Slot umwandeln – Kosten/Mindeststufe: Grad 1 = 2 FP (Stufe 6), Grad 2 = 3 FP (Stufe 7), Grad 3 = 5 FP (Stufe 13), Grad 4 = 6 FP (Stufe 19). Focused Strike (Stufe 11): nach Stunning Strike (egal ob Save geschafft) hat das Ziel Disadvantage auf Saves gegen deine Zauber bis Beginn deines nächsten Zuges. Improved Mystic Fighting Style (Stufe 17): bei Flurry of Blows zwei Unarmed Strikes durch einen Sorcerer-Zauber Grad 1 oder 2 (Castingzeit Action) ersetzen, als Teil derselben Bonus Action.",
+          "featurePages": [
+            {
+              "name": "Spellcasting",
+              "pageRef": 14
+            },
+            {
+              "name": "Mystic Fighting Style",
+              "pageRef": 16
+            },
+            {
+              "name": "Mystic Focus",
+              "pageRef": 16
+            },
+            {
+              "name": "Focused Strike",
+              "pageRef": 17
+            },
+            {
+              "name": "Improved Mystic Fighting Style",
+              "pageRef": 17
+            }
+          ]
         }
       },
       "pageRef": 101,
@@ -2200,7 +2541,8 @@
         "Warrior of Mercy": 104,
         "Warrior of Shadow": 105,
         "Warrior of the Elements": 106,
-        "Warrior of the Open Hand": 107
+        "Warrior of the Open Hand": 107,
+        "Warrior of the Mystic Arts": 14
       },
       "alwaysPreparedSpells": [
         {
@@ -2234,7 +2576,10 @@
         "19": 103,
         "20": 103
       },
-      "sourceTag": "PHB"
+      "sourceTag": "PHB",
+      "subclassSourceTags": {
+        "Warrior of the Mystic Arts": "AU"
+      }
     },
     {
       "id": "paladin",
@@ -3600,7 +3945,8 @@
         "Celestial Patron",
         "Fiend Patron",
         "Great Old One Patron",
-        "Undead Patron"
+        "Undead Patron",
+        "Vestige Patron"
       ],
       "keyFeaturesByLevel": {
         "1": [
@@ -3687,6 +4033,58 @@
           "sourceTag": "Rav",
           "sourceBook": "Ravenloft: The Horrors Within",
           "note": "Stufe 3 – Form of Dread: Bonus Action, 1 Min. Verwandlung (Nutzungen=CHA-Mod, min.1/Long Rest): Facsimile of Life (Temp-HP=1d10+Warlock-Level), Fearless Form (Immunität Frightened, beendet bestehenden Frightened-Zustand), Frightful Avatar (1x/Zug bei Trefferwurf: WIS-Save oder Frightened bis zu deinem nächsten Zug). Stufe 6 – Grave Touched: Arcane Necrosis (Necrotic-Schaden ignoriert Resistenz, 1x/Zug Schadenstyp zu Necrotic wandelbar), Dreaded Necrosis (bei Necrotic-Treffer während Form of Dread: +1 Schadenswürfel), Undead Endurance (keine Exhaustion durch Dehydration/Unterernährung/Ersticken, kein Schlaf nötig). Stufe 9 – Contact Patron: Contact Other Plane immer vorbereitet, ohne Slot wirkbar, automatischer Save-Erfolg. Stufe 14 – Superior Dread: während Form of Dread zusätzlich Dread Resistance (Resistenz B/P/S), Ghostly Flight (Fly=Speed+Hover, durch Kreaturen/Objekte als Difficult Terrain, 1d10 Force falls im Objekt endend), Profane Casting (Conjuration/Necromancy-Zauber ohne V/S/M außer teuren/verbrauchten Materialien)."
+        },
+        "Vestige Patron": {
+          "sourceTag": "AU",
+          "sourceBook": "Arcana Unleashed",
+          "choices": [
+            {
+              "level": 3,
+              "label": "Vestige Spells – Cleric-Domäne",
+              "options": [
+                "Life Domain",
+                "Light Domain",
+                "Trickery Domain",
+                "War Domain"
+              ]
+            },
+            {
+              "level": 3,
+              "label": "Vestige Companion – Typ (nach jeder Long Rest wechselbar)",
+              "options": [
+                "Celestial",
+                "Fiend",
+                "Undead"
+              ]
+            }
+          ],
+          "note": "Vestige Companion (Stufe 3): Begleiter (Small, Celestial/Fiend/Undead – Typ nach jeder Long Rest neu wählbar), Werte siehe Klassenressourcen. Handelt in deinem Zug; ohne Befehl nur Dodge, Befehl per Bonus Action – oder einen deiner Angriffe der Attack Action opfern für Vestige's Strike. Bei 0 HP verschwindet er; 1 Min. Zeremonie lässt ihn mit vollen HP neu erscheinen; per Magic Action in Taschendimension entlassen/zurückholen. Resistenz je Typ: Fire (Fiend), Necrotic (Undead), Radiant (Celestial); Immun gegen Charmed, Frightened, Prone. Divine Power (1/Day, Bonus Action): Cursed Invocation (Undead), Fiendish Swap (Fiend) oder Healing Touch (Celestial). Vestige Spells (Stufe 3): Domain Spells der gewählten Cleric-Domäne (Life/Light/Trickery/War) gelten als Warlock-Zauber und sind ab der jeweiligen Warlock-Stufe immer vorbereitet (siehe Zauberliste). Vestige Power (Stufe 6): Divine Power auch nach Short Rest oder Magical Cunning zurück; innerhalb 30 ft vom Vestige hast du dessen Resistenz. Vestige Recovery (Stufe 10): Reaction + Pact-Magic-Slot, wenn der Vestige auf 0 HP fiele → stattdessen volle HP, teleportiert bis 30 ft; 1x/Long Rest. Semblance of Life (Stufe 14): Magic Action (Vestige innerhalb 90 ft) – 1 Std. Celestial/Fiendish/Undead Spirit (Stat Block aus Summon Celestial/Fiend/Undead, Spell-Level = halbe Warlock-Stufe, max. 9); behält Persönlichkeit, Divine Power, HP und Hit Dice; erhält Temp HP in Höhe der Spirit-HP; endet ohne Temp HP; 1x/Long Rest.",
+          "featurePages": [
+            {
+              "name": "Vestige Companion",
+              "pageRef": 18
+            },
+            {
+              "name": "Vestige Companion (Stat Block)",
+              "pageRef": 18
+            },
+            {
+              "name": "Vestige Spells",
+              "pageRef": 19
+            },
+            {
+              "name": "Vestige Power",
+              "pageRef": 19
+            },
+            {
+              "name": "Vestige Recovery",
+              "pageRef": 19
+            },
+            {
+              "name": "Semblance of Life",
+              "pageRef": 19
+            }
+          ]
         }
       },
       "subclassAutoSpells": {
@@ -3792,10 +4190,93 @@
             "Antilife Shell",
             "Cloudkill"
           ]
+        },
+        "Vestige Patron": {
+          "Life Domain": {
+            "3": [
+              "Aid",
+              "Bless",
+              "Cure Wounds",
+              "Lesser Restoration"
+            ],
+            "5": [
+              "Mass Healing Word",
+              "Revivify"
+            ],
+            "7": [
+              "Aura of Life",
+              "Death Ward"
+            ],
+            "9": [
+              "Greater Restoration",
+              "Mass Cure Wounds"
+            ]
+          },
+          "Light Domain": {
+            "3": [
+              "Burning Hands",
+              "Faerie Fire",
+              "Scorching Ray",
+              "See Invisibility"
+            ],
+            "5": [
+              "Daylight",
+              "Fireball"
+            ],
+            "7": [
+              "Arcane Eye",
+              "Wall of Fire"
+            ],
+            "9": [
+              "Flame Strike",
+              "Scrying"
+            ]
+          },
+          "Trickery Domain": {
+            "3": [
+              "Charm Person",
+              "Disguise Self",
+              "Invisibility",
+              "Pass without Trace"
+            ],
+            "5": [
+              "Hypnotic Pattern",
+              "Nondetection"
+            ],
+            "7": [
+              "Confusion",
+              "Dimension Door"
+            ],
+            "9": [
+              "Dominate Person",
+              "Modify Memory"
+            ]
+          },
+          "War Domain": {
+            "3": [
+              "Guiding Bolt",
+              "Magic Weapon",
+              "Shield of Faith",
+              "Spiritual Weapon"
+            ],
+            "5": [
+              "Crusader's Mantle",
+              "Spirit Guardians"
+            ],
+            "7": [
+              "Fire Shield",
+              "Freedom of Movement"
+            ],
+            "9": [
+              "Hold Monster",
+              "Steel Wind Strike"
+            ]
+          }
         }
       },
       "subclassSourceTags": {
-        "Undead Patron": "Rav"
+        "Undead Patron": "Rav",
+        "Vestige Patron": "AU"
       },
       "pageRef": 153,
       "subclassPageRefs": {
@@ -3803,7 +4284,8 @@
         "Celestial Patron": 160,
         "Fiend Patron": 161,
         "Great Old One Patron": 162,
-        "Undead Patron": 24
+        "Undead Patron": 24,
+        "Vestige Patron": 18
       },
       "alwaysPreparedSpells": [
         {
@@ -3885,7 +4367,11 @@
         "Diviner",
         "Evoker",
         "Illusionist",
-        "Bladesinger"
+        "Bladesinger",
+        "Conjurer",
+        "Enchanter",
+        "Necromancer",
+        "Transmuter"
       ],
       "keyFeaturesByLevel": {
         "1": [
@@ -3948,6 +4434,19 @@
           "6": [
             "Summon Beast",
             "Summon Fey"
+          ]
+        },
+        "Necromancer": {
+          "6": [
+            "Animate Dead"
+          ]
+        },
+        "Transmuter": {
+          "3": [
+            "Alter Self"
+          ],
+          "10": [
+            "Polymorph"
           ]
         }
       },
@@ -4020,10 +4519,184 @@
               "pageRef": 27
             }
           ]
+        },
+        "Conjurer": {
+          "sourceTag": "AU",
+          "sourceBook": "Arcana Unleashed",
+          "savantChoice": {
+            "level": 3,
+            "count": 2,
+            "school": "Conjuration"
+          },
+          "note": "Conjuration Savant (Stufe 3): 2 Conjuration-Zauber (Grad max. 2) kostenlos ins Spellbook (Auswahl oben); zusätzlich bei jedem neuen Spell-Slot-Grad 1 weiterer Conjuration-Zauber kostenlos (nicht im Generator abgebildet, bitte manuell). Benign Transposition (Stufe 3): Bonus Action, bis 30 ft teleportieren – oder mit einer willigen Medium-oder-kleineren Kreatur in Reichweite Plätze tauschen; Nutzungen = INT-Mod (min. 1)/Long Rest. Distant Transposition (Stufe 6): Reichweite 60 ft; 1 Nutzung durch Ausgeben eines Slots Grad 3+ zurück (ohne Aktion). Durable Summons (Stufe 6): mit Slot per Conjuration-Zauber beschworene/erschaffene Kreaturen erhalten beim Erscheinen Temp HP = 2 × Wizard-Stufe und haben solange Resistenz gegen alles außer Force, Necrotic, Psychic, Radiant. Focused Conjuration (Stufe 10): Schaden bricht deine Concentration auf Conjuration-Zauber nicht. Splintered Summons (Stufe 14): Conjuration-Zauber mit eigenem Spirit-Stat-Block (z.B. Summon Aberration) beschwört 2 Kreaturen mit je halbierten HP; 1x/Long Rest oder durch Slot Grad 5+ wiederherstellbar.",
+          "featurePages": [
+            {
+              "name": "Benign Transposition",
+              "pageRef": 20
+            },
+            {
+              "name": "Conjuration Savant",
+              "pageRef": 20
+            },
+            {
+              "name": "Distant Transposition",
+              "pageRef": 20
+            },
+            {
+              "name": "Durable Summons",
+              "pageRef": 20
+            },
+            {
+              "name": "Focused Conjuration",
+              "pageRef": 20
+            },
+            {
+              "name": "Splintered Summons",
+              "pageRef": 20
+            }
+          ]
+        },
+        "Enchanter": {
+          "sourceTag": "AU",
+          "sourceBook": "Arcana Unleashed",
+          "savantChoice": {
+            "level": 3,
+            "count": 2,
+            "school": "Enchantment"
+          },
+          "note": "Enchanting Conversationalist (Stufe 3): Proficiency in Deception, Intimidation oder Persuasion (Auswahl oben); auf Checks mit diesem Skill + INT-Mod (min. +1). Enchantment Savant (Stufe 3): 2 Enchantment-Zauber (Grad max. 2) kostenlos ins Spellbook (Auswahl oben); zusätzlich bei jedem neuen Spell-Slot-Grad 1 weiterer Enchantment-Zauber kostenlos (nicht im Generator abgebildet, bitte manuell). Hypnotic Presence (Stufe 3, Magic Action): Kreatur innerhalb 10 ft, die dich sehen/hören kann – WIS-Save gegen Spell Save DC oder Charmed für 1 Min. (endet bei >10 ft Abstand, wenn sie dich weder sieht noch hört, oder bei Schaden); solange Incapacitated und Speed 0; Nutzungen = INT-Mod (min. 1)/Long Rest. Split Enchantment (Stufe 6): Enchantment-Zauber mit Slot, der höhergradig ein zusätzliches Ziel erhält (z.B. Charm Person), wirkt als 1 Grad höher; Nutzungen = INT-Mod/Long Rest. Instinctive Charm (Stufe 10): Reaction, wenn dich eine sichtbare Kreatur innerhalb 30 ft trifft – WIS-Save, bei Fehlschlag verfehlt der Angriff und trifft ggf. eine andere Kreatur in Reichweite (deine Wahl) mit demselben Wurf; 1x/Long Rest, auch durch Wirken eines Enchantment-Zaubers mit Slot wiederhergestellt. Alter Memories (Stufe 14): bei Enchantment-Zauber mit Slot, der Charmed verursacht – ein Ziel merkt die Bezauberung nicht; einmal während der Dauer per Magic Action INT-Save, bei Fehlschlag verliert es 1 + INT-Mod Stunden Erinnerung (max. Zauberdauer).",
+          "featurePages": [
+            {
+              "name": "Enchanting Conversationalist",
+              "pageRef": 21
+            },
+            {
+              "name": "Enchantment Savant",
+              "pageRef": 21
+            },
+            {
+              "name": "Hypnotic Presence",
+              "pageRef": 21
+            },
+            {
+              "name": "Split Enchantment",
+              "pageRef": 21
+            },
+            {
+              "name": "Instinctive Charm",
+              "pageRef": 21
+            },
+            {
+              "name": "Alter Memories",
+              "pageRef": 22
+            }
+          ],
+          "choices": [
+            {
+              "level": 3,
+              "label": "Enchanting Conversationalist – Skill-Proficiency",
+              "options": [
+                "Deception",
+                "Intimidation",
+                "Persuasion"
+              ]
+            }
+          ]
+        },
+        "Necromancer": {
+          "sourceTag": "AU",
+          "sourceBook": "Arcana Unleashed",
+          "savantChoice": {
+            "level": 3,
+            "count": 2,
+            "school": "Necromancy"
+          },
+          "note": "Necromancy Savant (Stufe 3): 2 Necromancy-Zauber (Grad max. 2) kostenlos ins Spellbook (Auswahl oben); zusätzlich bei jedem neuen Spell-Slot-Grad 1 weiterer Necromancy-Zauber kostenlos (nicht im Generator abgebildet, bitte manuell). Necromancy Spellbook (Stufe 3): Resistenz gegen Necrotic; Find Familiar steht in deinem Spellbook (zusätzliche Formen Skeleton/Zombie, normale Formen auch als Undead; bei der Attack Action kannst du einen eigenen Angriff opfern, damit dein Familiar per Reaction angreift); Undead Vitality: bei Necromancy-Zauber mit Slot heilt ein sichtbarer Undead innerhalb 60 ft um Slot-Grad + Wizard-Stufe. Grave Power (Stufe 6, Spellbook in der Hand): Arcane Recovery senkt Exhaustion um 1; Schaden deiner Wizard-Zauber/-Features ignoriert Necrotic-Resistenz. Undead Thralls (Stufe 6): Animate Dead immer vorbereitet, 1x/Long Rest ohne Slot, beim Wirken effektiv 1 Grad höher; (Spellbook in der Hand) Undead Fortitude: erschaffene/beschworene Undead +INT-Mod + halbe Wizard-Stufe HP; Withering Strike: deine Undead innerhalb 60 ft machen bei Treffern +INT-Mod (min. 1) Necrotic-Schaden. Harvest Undead (Stufe 10): Reaction, wenn du Bloodied wirst (nicht 0 HP) – einen eigenen sichtbaren Undead auf 0 HP setzen und Wizard-Stufe HP heilen. Death's Master (Stufe 14, Spellbook in der Hand): Bolster Undead (Bonus Action, eigene Undead innerhalb 60 ft erhalten Temp HP = Wizard-Stufe; 1x/Long Rest); Extinguish Undead (sichtbarer Undead auf 0 HP explodiert: halbe unverbrauchte Hit Dice in d6, 10-ft-Emanation, DEX-Save halbiert, bei Fehlschlag keine Reactions bis zum nächsten Zug; bei fremden Undead Reaction + Slot Grad 5+).",
+          "featurePages": [
+            {
+              "name": "Necromancy Savant",
+              "pageRef": 22
+            },
+            {
+              "name": "Necromancy Spellbook",
+              "pageRef": 22
+            },
+            {
+              "name": "Grave Power",
+              "pageRef": 22
+            },
+            {
+              "name": "Undead Thralls",
+              "pageRef": 23
+            },
+            {
+              "name": "Harvest Undead",
+              "pageRef": 23
+            },
+            {
+              "name": "Death's Master",
+              "pageRef": 23
+            }
+          ]
+        },
+        "Transmuter": {
+          "sourceTag": "AU",
+          "sourceBook": "Arcana Unleashed",
+          "savantChoice": {
+            "level": 3,
+            "count": 2,
+            "school": "Transmutation"
+          },
+          "note": "Transmutation Savant (Stufe 3): 2 Transmutation-Zauber (Grad max. 2) kostenlos ins Spellbook (Auswahl oben); zusätzlich bei jedem neuen Spell-Slot-Grad 1 weiterer Transmutation-Zauber kostenlos (nicht im Generator abgebildet, bitte manuell). Transmuter's Stone (Stufe 3): nach Long Rest ein magischer Stein (Tiny, Spellcasting Focus); der Träger erhält Proficiency in CON-Saves und einen Vorteil: Darkvision 60 ft (oder +60 ft), Resistance (Acid, Cold, Fire, Lightning, Poison oder Thunder) oder Speed +10 ft; Vorteil wechselbar beim Wirken eines Transmutation-Zaubers mit Slot. Wondrous Alteration (Stufe 3): Alter Self immer vorbereitet, 1x/Long Rest ohne Slot; Zusatz je Option – Aquatic Adaptation: unter Wasser Dash als Bonus Action; Change Appearance: Advantage auf CHA (Deception); Natural Weapons: Schaden 2d6 und Advantage auf CON-Saves für Concentration. Empowered Transmutation (Stufe 6): Transmutation-Zauber mit Slot ohne Angriffswurf/Save (z.B. Fly, Magic Weapon) wirkt 1 Grad höher; Nutzungen = INT-Mod (min. 1)/Long Rest. Potent Stone (Stufe 10): Stein mit bis zu 2 Vorteilen (nur Resistance doppelt, dann verschiedene Typen); neu: Mighty Build (Advantage auf STR-Saves, zählt eine Größe größer für Tragkraft) und Tremorsense 30 ft. Shape-Shifter (Stufe 10): Polymorph immer vorbereitet, 1x/Long Rest ohne Slot; auf dich selbst (1x/Long Rest) behältst du Erinnerungen, Kommunikation, INT/WIS/CHA, Proficiencies, Class Features und Feats und kannst Transmutation-Zauber ohne kostenpflichtige/verbrauchte Materialien wirken. Master Transmuter (Stufe 14): Magic Action, Stein verbrauchen (zerfällt, außer du gibst einen Slot Grad 7+ aus): Major Transformation, Panacea, Restore Life (Raise Dead ohne Slot) oder Restore Youth.",
+          "featurePages": [
+            {
+              "name": "Transmutation Savant",
+              "pageRef": 24
+            },
+            {
+              "name": "Transmuter's Stone",
+              "pageRef": 24
+            },
+            {
+              "name": "Wondrous Alteration",
+              "pageRef": 24
+            },
+            {
+              "name": "Empowered Transmutation",
+              "pageRef": 24
+            },
+            {
+              "name": "Potent Stone",
+              "pageRef": 25
+            },
+            {
+              "name": "Shape-Shifter",
+              "pageRef": 25
+            },
+            {
+              "name": "Master Transmuter",
+              "pageRef": 25
+            }
+          ],
+          "choices": [
+            {
+              "level": 3,
+              "label": "Transmuter's Stone – Startvorteil (bei Transmutation-Zauber mit Slot wechselbar)",
+              "options": [
+                "Darkvision",
+                "Resistance",
+                "Speed"
+              ]
+            }
+          ]
         }
       },
       "subclassSourceTags": {
-        "Bladesinger": "HoF"
+        "Bladesinger": "HoF",
+        "Conjurer": "AU",
+        "Enchanter": "AU",
+        "Necromancer": "AU",
+        "Transmuter": "AU"
       },
       "pageRef": 165,
       "subclassPageRefs": {
@@ -4031,7 +4704,11 @@
         "Diviner": 173,
         "Evoker": 174,
         "Illusionist": 175,
-        "Bladesinger": 26
+        "Bladesinger": 26,
+        "Conjurer": 19,
+        "Enchanter": 21,
+        "Necromancer": 22,
+        "Transmuter": 23
       },
       "keyFeaturesPageRefByLevel": {
         "1": 166,
@@ -4529,7 +5206,7 @@
     }
   ],
   "multiclassSpellSlots": {
-    "note": "Gesamtcaster-Level = alle Bard/Cleric/Druid/Sorcerer/Wizard-Level + halbe (aufgerundet) Paladin/Ranger-Level + 1/3 (abgerundet) Fighter/Rogue-Level NUR bei Eldritch-Knight/Arcane-Trickster-Subclass. Warlock Pact Magic zählt separat.",
+    "note": "Gesamtcaster-Level = alle Bard/Cleric/Druid/Sorcerer/Wizard-Level + halbe (aufgerundet) Paladin/Ranger-Level + 1/3 (abgerundet) Fighter/Rogue-Level bzw. Monk-Level NUR bei Eldritch-Knight/Arcane-Trickster/Warrior-of-the-Mystic-Arts-Subclass. Warlock Pact Magic zählt separat.",
     "table": {
       "1": [
         2
@@ -5778,6 +6455,206 @@
       "tool": "Thieves' Tools",
       "feat": "Alert",
       "equipment": "Thieves' Tools, Bullseye Lantern, Brechstange, Öl (10), Traveler's Clothes, 10 GP"
+    },
+    {
+      "id": "agent_of_the_ninth_quill",
+      "name": "Agent of the Ninth Quill",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 26,
+      "abilityScores": [
+        "Dexterity",
+        "Intelligence",
+        "Charisma"
+      ],
+      "skills": [
+        "Arcana",
+        "Sleight of Hand"
+      ],
+      "tool": "Thieves' Tools",
+      "feat": "Arcane Infiltrator",
+      "equipment": "Dagger, Light Hammer, Thieves' Tools, Iron Spikes, Rope, Traveler's Clothes, 17 GP",
+      "flavor": "Dein scharfer Verstand und dein Geschick als Einbrecher haben dich zum Ninth Quill geführt, einem Bund aus Dieben, Saboteuren und Spionen, der anderen magisches Wissen und Relikte stiehlt. Bei deinen Beutezügen – vom Entwenden magischer Gegenstände und arkaner Folianten bis zur Sabotage ganzer Magierzirkel – hast du gerissene Fähigkeiten und kleine magische Kniffe für dein Spionagehandwerk entwickelt."
+    },
+    {
+      "id": "bejeweled_conclave_spy",
+      "name": "Bejeweled Conclave Spy",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 27,
+      "abilityScores": [
+        "Dexterity",
+        "Wisdom",
+        "Charisma"
+      ],
+      "skills": [
+        "Deception",
+        "Perception"
+      ],
+      "tool": "Disguise Kit",
+      "feat": "Arcane Eloquence",
+      "equipment": "Disguise Kit, Fine Clothes, Perfume, 5 GP",
+      "flavor": "Nach außen bist du Höfling, Vermittler oder Unterhaltungskünstler. Doch hinter der glanzvollen Fassade arbeitet ein Geist, der darauf geschult ist, Geheimnisse zu sammeln. Von den Verzauberern des Bejeweled Conclave ausgebildet, weißt du Charme, Witz und ein wenig Magie einzusetzen, um Organisationen zu unterwandern, Informationen aufzudecken und Abmachungen einzufädeln."
+    },
+    {
+      "id": "cosmic_dawn_experiment",
+      "name": "Cosmic Dawn Experiment",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 27,
+      "abilityScores": [
+        "Strength",
+        "Dexterity",
+        "Constitution"
+      ],
+      "skills": [
+        "Athletics",
+        "Survival"
+      ],
+      "tool": "Artisan's Tools (Wahl)",
+      "feat": "Transmuted Anatomy",
+      "equipment": "Artisan's Tools (wie Werkzeug), Backpack, Robe, Traveler's Clothes, 30 GP",
+      "flavor": "Dein Körper wurde durch die Verwandlungskünste der Bringers of Cosmic Dawn verformt. Vielleicht bist du unfreiwillig in eines ihrer Experimente geraten, vielleicht gehörtest du selbst zu der Organisation und wolltest deine Gestalt durch Magie vervollkommnen. Wie auch immer – du nutzt deine fremdartige Anatomie zu deinem Vorteil."
+    },
+    {
+      "id": "covenant_of_the_grave_recruit",
+      "name": "Covenant of the Grave Recruit",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 27,
+      "abilityScores": [
+        "Strength",
+        "Intelligence",
+        "Wisdom"
+      ],
+      "skills": [
+        "History",
+        "Medicine"
+      ],
+      "tool": "Herbalism Kit",
+      "feat": "Arcane Undertaker",
+      "equipment": "Dagger, Herbalism Kit, Book (Anatomie), Shovel, 16 GP",
+      "flavor": "Der Tod hat dich schon immer fasziniert. Gemeinsam mit Mitgliedern des Covenant of the Grave hast du dieses düstere Thema studiert und das Makabre mit wissenschaftlicher Genauigkeit untersucht. Dabei hast du dir Wissen über Heilkunde, Nekromantie und Geschichte angeeignet."
+    },
+    {
+      "id": "crucible_storm_chaser",
+      "name": "Crucible Storm Chaser",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 28,
+      "abilityScores": [
+        "Strength",
+        "Constitution",
+        "Intelligence"
+      ],
+      "skills": [
+        "Athletics",
+        "Nature"
+      ],
+      "tool": "Glassblower's Tools",
+      "feat": "Arcane Overload",
+      "equipment": "Glassblower's Tools, Backpack, Rope, Traveler's Clothes, 15 GP",
+      "flavor": "Deine Tollkühnheit und dein Hunger nach Nervenkitzel haben dich zu den Crucible Keepers geführt, einer Organisation, die natürliche und magische Katastrophen erforscht. Ob du mit geschmolzenem Glas hantierst oder ins Auge eines Orkans stürmst – du blühst auf, wenn das Unheil nur wenige Schritte entfernt ist."
+    },
+    {
+      "id": "familiar_trainer",
+      "name": "Familiar Trainer",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 28,
+      "abilityScores": [
+        "Constitution",
+        "Intelligence",
+        "Wisdom"
+      ],
+      "skills": [
+        "Animal Handling",
+        "Arcana"
+      ],
+      "tool": "Gaming Set (Wahl)",
+      "feat": "Familiar Friend",
+      "equipment": "Quarterstaff, Gaming Set (wie Werkzeug), Bedroll, Bell, String, Tinderbox, Traveler's Clothes, Waterskin, 44 GP",
+      "flavor": "Schon in jungen Jahren hat sich ein magischer Vertrauter an dich gebunden und dich durch deine Jugend begleitet. Ein Leben ohne deinen pelzigen – oder gefiederten, geschuppten oder schleimigen – Freund an deiner Seite kannst du dir nicht mehr vorstellen. Ihr arbeitet Hand in Hand, und wenn das Abenteuer seine Prüfungen stellt, erinnert dich dein Vertrauter an die kleinen Freuden des Lebens."
+    },
+    {
+      "id": "horizon_weaver_initiate",
+      "name": "Horizon Weaver Initiate",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 29,
+      "abilityScores": [
+        "Dexterity",
+        "Constitution",
+        "Wisdom"
+      ],
+      "skills": [
+        "Acrobatics",
+        "Survival"
+      ],
+      "tool": "Weaver's Tools",
+      "feat": "Portal Jumper",
+      "equipment": "Shortbow+20 Pfeile, Weaver's Tools, Map, Quiver, Rope, Traveler's Clothes, 18 GP",
+      "flavor": "Deine Jugend war von unstillbarem Fernweh geprägt. Sobald du konntest, bist du aufgebrochen. Unterwegs bist du den abenteuerlustigen Beschwörern der Horizon Weavers begegnet, die dich ein wenig ihrer Teleportationsmagie lehrten, damit du deine Erkundungen noch weiter treiben kannst."
+    },
+    {
+      "id": "phantasmic_circus_trouper",
+      "name": "Phantasmic Circus Trouper",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 29,
+      "abilityScores": [
+        "Dexterity",
+        "Constitution",
+        "Charisma"
+      ],
+      "skills": [
+        "Deception",
+        "Performance"
+      ],
+      "tool": "Disguise Kit",
+      "feat": "Arcane Artist",
+      "equipment": "Disguise Kit, Gaming Set (beliebig), Costume, Mirror, Traveler's Clothes, 12 GP",
+      "flavor": "Ob als Artist oder als Zirkushelfer – bei den Mitgliedern des Phantasmic Circus hast du ein Zuhause gefunden. Während ihr durch die Welt zogt und begeistertem Publikum Magie und Staunen brachtet, hast du etwas Illusionsmagie gelernt und dein Talent für Auftritt und Ablenkung geschärft."
+    },
+    {
+      "id": "seer_apprentice",
+      "name": "Seer Apprentice",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 30,
+      "abilityScores": [
+        "Intelligence",
+        "Wisdom",
+        "Charisma"
+      ],
+      "skills": [
+        "History",
+        "Insight"
+      ],
+      "tool": "Navigator's Tools",
+      "feat": "Arcane Omens",
+      "equipment": "Navigator's Tools, 8 Candles, Ink, Ink Pen, Parchment (9 Blatt), Pouch, Tinderbox, Traveler's Clothes, 11 GP",
+      "flavor": "Als Lehrling bei den Seers of Sea and Sky hast du gelernt, kleine Omen in den Wolken über dir und den Tiefen unter dir zu deuten. Das reiche Netz an Bibliotheken der Organisation hat deine Bildung vertieft, und nun ziehst du durch die Welt und gibst anderen Rat und Hilfe."
+    },
+    {
+      "id": "ward_of_the_sheltering_hands",
+      "name": "Ward of the Sheltering Hands",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 30,
+      "abilityScores": [
+        "Constitution",
+        "Wisdom",
+        "Charisma"
+      ],
+      "skills": [
+        "Insight",
+        "Medicine"
+      ],
+      "tool": "Cook's Utensils",
+      "feat": "Arcane Safeguard",
+      "equipment": "Cook's Utensils, Blanket, Healer's Kit, Lamp, Oil (3 Flaschen), Tinderbox, Traveler's Clothes, Waterskin, 40 GP",
+      "flavor": "Eine Pechsträhne hat dich zu den Sheltering Hands geführt, einer selbstlosen Organisation, die sich dem Schutz der Schwachen verschrieben hat. Sie halfen dir wieder auf die Beine und lehrten dich etwas von ihrer Schutzmagie – in der Hoffnung, dass auch du eines Tages den Bedürftigen in ihrer Not Zuflucht bieten wirst."
     }
   ],
   "feats_origin": [
@@ -5973,6 +6850,248 @@
       "sourceBook": "Ravenloft: The Horrors Within",
       "desc": "Hypervigilance: Bei Initiative-Wurf ≤9 einmal neu würfeln (neues Ergebnis zählt, muss genutzt werden). Steel Yourself: Bei fehlgeschlagenem Save gegen Charmed/Frightened als Reaction +Proficiency-Bonus auf den Wurf (kann Fehlschlag in Erfolg verwandeln), 1x/Long Rest.",
       "pageRef": 32
+    },
+    {
+      "name": "Arcane Artist",
+      "desc": "Cantrip: Minor Illusion (INT/WIS/CHA, bei Wahl festgelegt). Inspiring Magic: Wenn du einen Illusion-Zauber wirkst, erhält ein Verbündeter innerhalb 30 ft, der dich sehen kann, Heroic Inspiration; 1x/Long Rest.",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 31,
+      "choice": [
+        {
+          "type": "spellAbility",
+          "options": [
+            "Intelligence",
+            "Wisdom",
+            "Charisma"
+          ],
+          "label": "Zauberattribut für den Feat-Zaubertrick (INT/WIS/CHA)"
+        }
+      ],
+      "autoGrantedSpells": [
+        {
+          "level": 1,
+          "spells": [
+            "Minor Illusion"
+          ],
+          "note": "Bekannter Zaubertrick (Feat)"
+        }
+      ]
+    },
+    {
+      "name": "Arcane Eloquence",
+      "desc": "Cantrip: Vicious Mockery (INT/WIS/CHA). Smooth Talker: bei CHA (Deception, Intimidation oder Persuasion) +1d4 auf den Check.",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 32,
+      "choice": [
+        {
+          "type": "spellAbility",
+          "options": [
+            "Intelligence",
+            "Wisdom",
+            "Charisma"
+          ],
+          "label": "Zauberattribut für den Feat-Zaubertrick (INT/WIS/CHA)"
+        }
+      ],
+      "autoGrantedSpells": [
+        {
+          "level": 1,
+          "spells": [
+            "Vicious Mockery"
+          ],
+          "note": "Bekannter Zaubertrick (Feat)"
+        }
+      ]
+    },
+    {
+      "name": "Arcane Infiltrator",
+      "desc": "Cantrip: Friends (INT/WIS/CHA). Cunning Diversion: Dodge als Bonus Action, Proficiency-Bonus-mal pro Long Rest.",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 32,
+      "choice": [
+        {
+          "type": "spellAbility",
+          "options": [
+            "Intelligence",
+            "Wisdom",
+            "Charisma"
+          ],
+          "label": "Zauberattribut für den Feat-Zaubertrick (INT/WIS/CHA)"
+        }
+      ],
+      "autoGrantedSpells": [
+        {
+          "level": 1,
+          "spells": [
+            "Friends"
+          ],
+          "note": "Bekannter Zaubertrick (Feat)"
+        }
+      ]
+    },
+    {
+      "name": "Arcane Omens",
+      "desc": "Cantrip: Guidance (INT/WIS/CHA). Helpful Premonition: Reaction, wenn du oder eine sichtbare Kreatur innerhalb 30 ft einen Save verfehlt – +1d4 auf den Save; Proficiency-Bonus-mal pro Long Rest.",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 32,
+      "choice": [
+        {
+          "type": "spellAbility",
+          "options": [
+            "Intelligence",
+            "Wisdom",
+            "Charisma"
+          ],
+          "label": "Zauberattribut für den Feat-Zaubertrick (INT/WIS/CHA)"
+        }
+      ],
+      "autoGrantedSpells": [
+        {
+          "level": 1,
+          "spells": [
+            "Guidance"
+          ],
+          "note": "Bekannter Zaubertrick (Feat)"
+        }
+      ]
+    },
+    {
+      "name": "Arcane Overload",
+      "desc": "Cantrip: Fire Bolt (INT/WIS/CHA). Power Surge: bei Schaden durch einen Evocation-Zauber + Proficiency Bonus auf einen Schadenswurf; 1x/Long Rest.",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 32,
+      "choice": [
+        {
+          "type": "spellAbility",
+          "options": [
+            "Intelligence",
+            "Wisdom",
+            "Charisma"
+          ],
+          "label": "Zauberattribut für den Feat-Zaubertrick (INT/WIS/CHA)"
+        }
+      ],
+      "autoGrantedSpells": [
+        {
+          "level": 1,
+          "spells": [
+            "Fire Bolt"
+          ],
+          "note": "Bekannter Zaubertrick (Feat)"
+        }
+      ]
+    },
+    {
+      "name": "Arcane Safeguard",
+      "desc": "Cantrip: Resistance (INT/WIS/CHA); als Bonus Action wirkbar, Proficiency-Bonus-mal pro Long Rest. Sheltering Aid: Wenn du mit der Help-Action bei einem Ability Check hilfst, erhält der Verbündete Temp HP = Proficiency Bonus.",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 32,
+      "choice": [
+        {
+          "type": "spellAbility",
+          "options": [
+            "Intelligence",
+            "Wisdom",
+            "Charisma"
+          ],
+          "label": "Zauberattribut für den Feat-Zaubertrick (INT/WIS/CHA)"
+        }
+      ],
+      "autoGrantedSpells": [
+        {
+          "level": 1,
+          "spells": [
+            "Resistance"
+          ],
+          "note": "Bekannter Zaubertrick (Feat)"
+        }
+      ]
+    },
+    {
+      "name": "Arcane Undertaker",
+      "desc": "Cantrip: ein Cleric- oder Wizard-Zaubertrick der Necromancy-Schule nach Wahl (INT/WIS/CHA). Knowledge from the Dead: +1d4 auf INT (History) und WIS (Medicine). Understanding of Death: Help-Action zum Stabilisieren einer Kreatur mit 0 HP gibt dir Heroic Inspiration; 1x/Long Rest.",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 32,
+      "choice": [
+        {
+          "type": "spellAbility",
+          "options": [
+            "Intelligence",
+            "Wisdom",
+            "Charisma"
+          ],
+          "label": "Zauberattribut für den Feat-Zaubertrick (INT/WIS/CHA)"
+        },
+        {
+          "type": "cantripFromSchools",
+          "classes": [
+            "cleric",
+            "wizard"
+          ],
+          "schools": [
+            "Necromancy"
+          ],
+          "label": "Necromancy-Zaubertrick (Cleric- oder Wizard-Liste)"
+        }
+      ]
+    },
+    {
+      "name": "Familiar Friend",
+      "desc": "Faithful Companion: Find Familiar immer vorbereitet (INT/WIS/CHA), 1x/Long Rest ohne Slot und ohne Material-Komponenten, sonst mit Slots. Fortified Familiar: Familiar erhält +2 × Charakterstufe HP (Maximum und aktuell). Helpful Friend: Advantage auf Checks mit einem Skill, in dem du proficient bist, wenn der Familiar innerhalb 5 ft ist; Proficiency-Bonus-mal pro Long Rest.",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 33,
+      "choice": [
+        {
+          "type": "spellAbility",
+          "options": [
+            "Intelligence",
+            "Wisdom",
+            "Charisma"
+          ],
+          "label": "Zauberattribut für Find Familiar (INT/WIS/CHA)"
+        }
+      ],
+      "autoGrantedSpells": [
+        {
+          "level": 1,
+          "spells": [
+            "Find Familiar"
+          ],
+          "note": "Immer vorbereitet, 1x/Long Rest ohne Slot und ohne Material-Komponenten, sonst mit Slots"
+        }
+      ]
+    },
+    {
+      "name": "Portal Jumper",
+      "desc": "Otherworldly Resilience: Resistenz gegen Necrotic, Psychic oder Radiant (bei Wahl). Portal Step: 15 ft Bewegung ausgeben, um dich 15 ft weit zu teleportieren; Proficiency-Bonus-mal pro Long Rest, max. 1x pro Zug.",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 33,
+      "choice": {
+        "type": "damageType",
+        "options": [
+          "Necrotic",
+          "Psychic",
+          "Radiant"
+        ],
+        "label": "Otherworldly Resilience – Resistenz"
+      }
+    },
+    {
+      "name": "Transmuted Anatomy",
+      "desc": "Lengthened Stride: Speed +5 ft. Resilient Anatomy: Advantage auf Saves gegen unfreiwillige Gestaltwandlung; Reaction bei verfehltem CON-Save: +1d4 auf den Save, Proficiency-Bonus-mal pro Long Rest.",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 33,
+      "speedBonus": 5
     }
   ],
   "note": "Dies ist eine kompakte Auswahl der wichtigsten Feats; das vollständige PHB enthält weitere General Feats und alle Epic Boon Feats (ab Stufe 19). Bei Bedarf können weitere ergänzt werden.",
@@ -6515,6 +7634,7 @@
   "spellsByClass": {
     "bard": {
       "cantrips": [
+        "Blade Ward (Abjuration)",
         "Dancing Lights (Illusion)",
         "Friends (Enchantment)",
         "Light (Evocation)",
@@ -6523,6 +7643,8 @@
         "Message (Transmutation)",
         "Minor Illusion (Illusion)",
         "Prestidigitation (Transmutation)",
+        "Starry Wisp (Evocation)",
+        "Thunderclap (Evocation)",
         "True Strike (Divination)",
         "Vicious Mockery (Enchantment)"
       ],
@@ -6531,6 +7653,7 @@
         "Bane (Enchantment)",
         "Charm Person (Enchantment)",
         "Color Spray (Illusion)",
+        "Command (Enchantment)",
         "Comprehend Languages (Divination)",
         "Cure Wounds (Abjuration)",
         "Detect Magic (Divination)",
@@ -6542,37 +7665,67 @@
         "Heroism (Enchantment)",
         "Identify (Divination)",
         "Illusory Script (Illusion)",
+        "Longstrider (Transmutation)",
+        "Silent Image (Illusion)",
         "Sleep (Enchantment)",
         "Speak with Animals (Divination)",
+        "Tasha's Hideous Laughter (Enchantment)",
         "Thunderwave (Evocation)",
+        "Unseen Servant (Conjuration)",
         "Wardaway (Abjuration) (HoF)"
       ],
       "level2": [
+        "Aid (Abjuration)",
         "Animal Messenger (Enchantment)",
+        "Blindness/Deafness (Transmutation)",
         "Calm Emotions (Enchantment)",
         "Cloud of Daggers (Conjuration)",
+        "Crown of Madness (Enchantment)",
+        "Detect Thoughts (Divination)",
+        "Enhance Ability (Transmutation)",
+        "Enlarge/Reduce (Transmutation)",
         "Enthrall (Enchantment)",
         "Heat Metal (Transmutation)",
         "Hold Person (Enchantment)",
         "Invisibility (Illusion)",
         "Knock (Transmutation)",
+        "Lesser Restoration (Abjuration)",
+        "Locate Animals or Plants (Divination)",
+        "Locate Object (Divination)",
+        "Magic Mouth (Illusion)",
         "Mirror Image (Illusion)",
+        "Phantasmal Force (Illusion)",
+        "See Invisibility (Divination)",
         "Shatter (Evocation)",
-        "Suggestion (Enchantment)"
+        "Silence (Illusion)",
+        "Suggestion (Enchantment)",
+        "Zone of Truth (Enchantment)",
+        "Disruptive Tune (Abjuration) (AU)",
+        "Dueling Ground (Abjuration) (AU)",
+        "Uncertain Footing (Illusion) (AU)"
       ],
       "level3": [
+        "Bestow Curse (Necromancy)",
         "Clairvoyance (Divination)",
         "Dispel Magic (Abjuration)",
         "Fear (Illusion)",
         "Feign Death (Necromancy)",
+        "Glyph of Warding (Abjuration)",
         "Hypnotic Pattern (Illusion)",
+        "Leomund's Tiny Hut (Evocation)",
         "Major Image (Illusion)",
+        "Mass Healing Word (Abjuration)",
+        "Nondetection (Abjuration)",
+        "Plant Growth (Transmutation)",
         "Sending (Divination)",
+        "Slow (Transmutation)",
         "Speak with Dead (Necromancy)",
         "Speak with Plants (Transmutation)",
         "Stinking Cloud (Conjuration)",
         "Tongues (Divination)",
-        "Cacophonic Shield (Evocation) (HoF)"
+        "Cacophonic Shield (Evocation) (HoF)",
+        "Catnap (Enchantment) (AU)",
+        "Inflict Doubt (Enchantment) (AU)"
       ]
     },
     "cleric": {
@@ -6600,6 +7753,7 @@
         "Healing Word (Abjuration)",
         "Inflict Wounds (Necromancy)",
         "Protection from Evil and Good (Abjuration)",
+        "Purify Food and Drink (Transmutation)",
         "Sanctuary (Abjuration)",
         "Shield of Faith (Abjuration)",
         "Wardaway (Abjuration) (HoF)"
@@ -6607,6 +7761,7 @@
       "level2": [
         "Aid (Abjuration)",
         "Augury (Divination)",
+        "Blindness/Deafness (Transmutation)",
         "Calm Emotions (Enchantment)",
         "Continual Flame (Evocation)",
         "Enhance Ability (Transmutation)",
@@ -6614,15 +7769,20 @@
         "Gentle Repose (Necromancy)",
         "Hold Person (Enchantment)",
         "Lesser Restoration (Abjuration)",
+        "Locate Object (Divination)",
         "Prayer of Healing (Abjuration)",
         "Protection from Poison (Abjuration)",
+        "Silence (Illusion)",
         "Spiritual Weapon (Evocation)",
         "Warding Bond (Abjuration)",
         "Zone of Truth (Enchantment)",
-        "Deryan's Helpful Homunculi (Conjuration) (HoF)"
+        "Deryan's Helpful Homunculi (Conjuration) (HoF)",
+        "Dueling Ground (Abjuration) (AU)"
       ],
       "level3": [
         "Animate Dead (Necromancy)",
+        "Aura of Vitality (Abjuration)",
+        "Beacon of Hope (Abjuration)",
         "Bestow Curse (Necromancy)",
         "Clairvoyance (Divination)",
         "Create Food and Water (Conjuration)",
@@ -6630,6 +7790,7 @@
         "Dispel Magic (Abjuration)",
         "Feign Death (Necromancy)",
         "Glyph of Warding (Abjuration)",
+        "Magic Circle (Abjuration)",
         "Mass Healing Word (Abjuration)",
         "Meld into Stone (Transmutation)",
         "Protection from Energy (Abjuration)",
@@ -6637,7 +7798,8 @@
         "Revivify (Necromancy)",
         "Sending (Divination)",
         "Speak with Dead (Necromancy)",
-        "Spirit Guardians (Necromancy)",
+        "Spirit Guardians (Conjuration)",
+        "Tongues (Divination)",
         "Water Walk (Transmutation)",
         "Laerel's Silver Lance (Evocation) (HoF)"
       ]
@@ -6645,17 +7807,22 @@
     "druid": {
       "cantrips": [
         "Druidcraft (Transmutation)",
+        "Elementalism (Transmutation)",
         "Guidance (Divination)",
         "Mending (Transmutation)",
+        "Message (Transmutation)",
         "Poison Spray (Necromancy)",
-        "Produce Flame (Evocation)",
+        "Produce Flame (Conjuration)",
         "Resistance (Abjuration)",
         "Shillelagh (Transmutation)",
+        "Spare the Dying (Necromancy)",
         "Starry Wisp (Evocation)",
-        "Thorn Whip (Transmutation)"
+        "Thorn Whip (Transmutation)",
+        "Thunderclap (Evocation)"
       ],
       "level1": [
         "Animal Friendship (Enchantment)",
+        "Charm Person (Enchantment)",
         "Create or Destroy Water (Transmutation)",
         "Cure Wounds (Abjuration)",
         "Detect Magic (Divination)",
@@ -6666,33 +7833,56 @@
         "Goodberry (Conjuration)",
         "Healing Word (Abjuration)",
         "Ice Knife (Conjuration)",
+        "Jump (Transmutation)",
+        "Longstrider (Transmutation)",
+        "Protection from Evil and Good (Abjuration)",
+        "Purify Food and Drink (Transmutation)",
         "Speak with Animals (Divination)",
         "Thunderwave (Evocation)"
       ],
       "level2": [
+        "Aid (Abjuration)",
         "Animal Messenger (Enchantment)",
-        "Barkskin (Abjuration)",
+        "Augury (Divination)",
+        "Barkskin (Transmutation)",
+        "Beast Sense (Divination)",
+        "Continual Flame (Evocation)",
         "Darkvision (Transmutation)",
         "Enhance Ability (Transmutation)",
+        "Enlarge/Reduce (Transmutation)",
         "Find Traps (Divination)",
         "Flame Blade (Evocation)",
         "Flaming Sphere (Conjuration)",
         "Gust of Wind (Evocation)",
         "Heat Metal (Transmutation)",
+        "Hold Person (Enchantment)",
+        "Lesser Restoration (Abjuration)",
+        "Locate Animals or Plants (Divination)",
+        "Locate Object (Divination)",
         "Moonbeam (Evocation)",
         "Pass without Trace (Abjuration)",
-        "Spike Growth (Transmutation)"
+        "Protection from Poison (Abjuration)",
+        "Spike Growth (Transmutation)",
+        "Summon Beast (Conjuration)",
+        "Battle Familiar (Conjuration) (AU)",
+        "Dueling Ground (Abjuration) (AU)",
+        "Wither and Bloom (Necromancy) (AU)"
       ],
       "level3": [
+        "Aura of Vitality (Abjuration)",
         "Call Lightning (Conjuration)",
         "Conjure Animals (Conjuration)",
         "Daylight (Evocation)",
         "Dispel Magic (Abjuration)",
+        "Elemental Weapon (Transmutation)",
+        "Feign Death (Necromancy)",
         "Meld into Stone (Transmutation)",
         "Plant Growth (Transmutation)",
         "Protection from Energy (Abjuration)",
+        "Revivify (Necromancy)",
         "Sleet Storm (Conjuration)",
         "Speak with Plants (Transmutation)",
+        "Summon Fey (Conjuration)",
         "Water Breathing (Transmutation)",
         "Water Walk (Transmutation)",
         "Wind Wall (Evocation)",
@@ -6701,16 +7891,25 @@
     },
     "sorcerer": {
       "cantrips": [
+        "Acid Splash (Evocation)",
+        "Blade Ward (Abjuration)",
         "Chill Touch (Necromancy)",
+        "Dancing Lights (Illusion)",
+        "Elementalism (Transmutation)",
+        "Fire Bolt (Evocation)",
+        "Friends (Enchantment)",
         "Light (Evocation)",
         "Mage Hand (Conjuration)",
         "Mending (Transmutation)",
+        "Message (Transmutation)",
+        "Mind Sliver (Enchantment)",
         "Minor Illusion (Illusion)",
         "Poison Spray (Necromancy)",
         "Prestidigitation (Transmutation)",
         "Ray of Frost (Evocation)",
         "Shocking Grasp (Evocation)",
         "Sorcerous Burst (Evocation)",
+        "Thunderclap (Evocation)",
         "True Strike (Divination)"
       ],
       "level1": [
@@ -6718,15 +7917,19 @@
         "Charm Person (Enchantment)",
         "Chromatic Orb (Evocation)",
         "Color Spray (Illusion)",
+        "Comprehend Languages (Divination)",
         "Detect Magic (Divination)",
         "Disguise Self (Illusion)",
         "Expeditious Retreat (Transmutation)",
         "False Life (Necromancy)",
         "Feather Fall (Transmutation)",
         "Fog Cloud (Conjuration)",
+        "Grease (Conjuration)",
+        "Ice Knife (Conjuration)",
         "Jump (Transmutation)",
         "Mage Armor (Abjuration)",
         "Magic Missile (Evocation)",
+        "Ray of Sickness (Necromancy)",
         "Shield (Abjuration)",
         "Silent Image (Illusion)",
         "Sleep (Enchantment)",
@@ -6736,19 +7939,39 @@
       ],
       "level2": [
         "Alter Self (Transmutation)",
-        "Blindness/Deafness (Necromancy)",
+        "Arcane Vigor (Abjuration)",
+        "Blindness/Deafness (Transmutation)",
         "Blur (Illusion)",
         "Cloud of Daggers (Conjuration)",
+        "Crown of Madness (Enchantment)",
         "Darkness (Evocation)",
+        "Darkvision (Transmutation)",
+        "Detect Thoughts (Divination)",
+        "Dragon's Breath (Transmutation)",
+        "Enhance Ability (Transmutation)",
         "Enlarge/Reduce (Transmutation)",
+        "Flame Blade (Evocation)",
+        "Flaming Sphere (Conjuration)",
+        "Gust of Wind (Evocation)",
+        "Hold Person (Enchantment)",
         "Invisibility (Illusion)",
+        "Knock (Transmutation)",
+        "Levitate (Transmutation)",
+        "Magic Weapon (Transmutation)",
+        "Mind Spike (Divination)",
         "Mirror Image (Illusion)",
         "Misty Step (Conjuration)",
+        "Phantasmal Force (Illusion)",
         "Scorching Ray (Evocation)",
         "See Invisibility (Divination)",
         "Shatter (Evocation)",
+        "Spider Climb (Transmutation)",
+        "Suggestion (Enchantment)",
         "Web (Conjuration)",
-        "Death Armor (Necromancy) (HoF)"
+        "Death Armor (Necromancy) (HoF)",
+        "Disruptive Tune (Abjuration) (AU)",
+        "Dueling Ground (Abjuration) (AU)",
+        "Wither and Bloom (Necromancy) (AU)"
       ],
       "level3": [
         "Blink (Transmutation)",
@@ -6756,14 +7979,25 @@
         "Counterspell (Abjuration)",
         "Daylight (Evocation)",
         "Dispel Magic (Abjuration)",
+        "Fear (Illusion)",
         "Fireball (Evocation)",
         "Fly (Transmutation)",
+        "Gaseous Form (Transmutation)",
         "Haste (Transmutation)",
         "Hypnotic Pattern (Illusion)",
         "Lightning Bolt (Evocation)",
+        "Major Image (Illusion)",
+        "Protection from Energy (Abjuration)",
         "Sleet Storm (Conjuration)",
+        "Slow (Transmutation)",
+        "Stinking Cloud (Conjuration)",
         "Tongues (Divination)",
+        "Vampiric Touch (Necromancy)",
+        "Water Breathing (Transmutation)",
+        "Water Walk (Transmutation)",
         "Cacophonic Shield (Evocation) (HoF)",
+        "Catnap (Enchantment) (AU)",
+        "Inflict Doubt (Enchantment) (AU)",
         "Laerel's Silver Lance (Evocation) (HoF)"
       ]
     },
@@ -6794,6 +8028,8 @@
         "Hex (Enchantment)",
         "Illusory Script (Illusion)",
         "Protection from Evil and Good (Abjuration)",
+        "Speak with Animals (Divination)",
+        "Tasha's Hideous Laughter (Enchantment)",
         "Unseen Servant (Conjuration)",
         "Witch Bolt (Evocation)"
       ],
@@ -6804,18 +8040,22 @@
         "Enthrall (Enchantment)",
         "Hold Person (Enchantment)",
         "Invisibility (Illusion)",
+        "Mind Spike (Divination)",
         "Mirror Image (Illusion)",
         "Misty Step (Conjuration)",
         "Ray of Enfeeblement (Necromancy)",
-        "Shatter (Evocation)",
         "Spider Climb (Transmutation)",
-        "Suggestion (Enchantment)"
+        "Suggestion (Enchantment)",
+        "Battle Familiar (Conjuration) (AU)",
+        "Dueling Ground (Abjuration) (AU)",
+        "Uncertain Footing (Illusion) (AU)"
       ],
       "level3": [
         "Counterspell (Abjuration)",
         "Dispel Magic (Abjuration)",
         "Fear (Illusion)",
         "Fly (Transmutation)",
+        "Gaseous Form (Transmutation)",
         "Hunger of Hadar (Conjuration)",
         "Hypnotic Pattern (Illusion)",
         "Magic Circle (Abjuration)",
@@ -6824,30 +8064,38 @@
         "Summon Fey (Conjuration)",
         "Summon Undead (Necromancy)",
         "Tongues (Divination)",
-        "Vampiric Touch (Necromancy)"
+        "Vampiric Touch (Necromancy)",
+        "Inflict Doubt (Enchantment) (AU)"
       ]
     },
     "wizard": {
       "cantrips": [
-        "Acid Splash (Conjuration)",
+        "Acid Splash (Evocation)",
+        "Blade Ward (Abjuration)",
         "Chill Touch (Necromancy)",
         "Dancing Lights (Illusion)",
+        "Elementalism (Transmutation)",
         "Fire Bolt (Evocation)",
+        "Friends (Enchantment)",
         "Light (Evocation)",
         "Mage Hand (Conjuration)",
         "Mending (Transmutation)",
         "Message (Transmutation)",
+        "Mind Sliver (Enchantment)",
         "Minor Illusion (Illusion)",
         "Poison Spray (Necromancy)",
         "Prestidigitation (Transmutation)",
         "Ray of Frost (Evocation)",
         "Shocking Grasp (Evocation)",
+        "Thunderclap (Evocation)",
+        "Toll the Dead (Necromancy)",
         "True Strike (Divination)"
       ],
       "level1": [
         "Alarm (Abjuration)",
         "Burning Hands (Evocation)",
         "Charm Person (Enchantment)",
+        "Chromatic Orb (Evocation)",
         "Color Spray (Illusion)",
         "Comprehend Languages (Divination)",
         "Detect Magic (Divination)",
@@ -6857,16 +8105,23 @@
         "Feather Fall (Transmutation)",
         "Find Familiar (Conjuration)",
         "Fog Cloud (Conjuration)",
+        "Grease (Conjuration)",
+        "Ice Knife (Conjuration)",
         "Identify (Divination)",
         "Illusory Script (Illusion)",
         "Jump (Transmutation)",
         "Longstrider (Transmutation)",
         "Mage Armor (Abjuration)",
         "Magic Missile (Evocation)",
+        "Protection from Evil and Good (Abjuration)",
+        "Ray of Sickness (Necromancy)",
         "Shield (Abjuration)",
         "Silent Image (Illusion)",
         "Sleep (Enchantment)",
+        "Tasha's Hideous Laughter (Enchantment)",
+        "Tenser's Floating Disk (Conjuration)",
         "Thunderwave (Evocation)",
+        "Unseen Servant (Conjuration)",
         "Witch Bolt (Evocation)",
         "Spellfire Flare (Evocation) (HoF)",
         "Wardaway (Abjuration) (HoF)"
@@ -6874,28 +8129,51 @@
       "level2": [
         "Alter Self (Transmutation)",
         "Arcane Lock (Abjuration)",
-        "Blindness/Deafness (Necromancy)",
+        "Arcane Vigor (Abjuration)",
+        "Augury (Divination)",
+        "Blindness/Deafness (Transmutation)",
         "Blur (Illusion)",
+        "Cloud of Daggers (Conjuration)",
         "Continual Flame (Evocation)",
+        "Crown of Madness (Enchantment)",
         "Darkness (Evocation)",
         "Darkvision (Transmutation)",
         "Detect Thoughts (Divination)",
+        "Dragon's Breath (Transmutation)",
+        "Enhance Ability (Transmutation)",
         "Enlarge/Reduce (Transmutation)",
+        "Flaming Sphere (Conjuration)",
+        "Gentle Repose (Necromancy)",
         "Gust of Wind (Evocation)",
+        "Hold Person (Enchantment)",
         "Invisibility (Illusion)",
         "Knock (Transmutation)",
         "Levitate (Transmutation)",
         "Locate Object (Divination)",
+        "Magic Mouth (Illusion)",
+        "Magic Weapon (Transmutation)",
+        "Melf's Acid Arrow (Evocation)",
+        "Mind Spike (Divination)",
         "Mirror Image (Illusion)",
         "Misty Step (Conjuration)",
         "Nystul's Magic Aura (Illusion)",
+        "Phantasmal Force (Illusion)",
+        "Ray of Enfeeblement (Necromancy)",
+        "Rope Trick (Transmutation)",
         "Scorching Ray (Evocation)",
         "See Invisibility (Divination)",
         "Shatter (Evocation)",
+        "Spider Climb (Transmutation)",
+        "Suggestion (Enchantment)",
         "Web (Conjuration)",
+        "Battle Familiar (Conjuration) (AU)",
         "Death Armor (Necromancy) (HoF)",
         "Deryan's Helpful Homunculi (Conjuration) (HoF)",
-        "Elminster's Elusion (Abjuration) (HoF)"
+        "Disruptive Tune (Abjuration) (AU)",
+        "Dueling Ground (Abjuration) (AU)",
+        "Elminster's Elusion (Abjuration) (HoF)",
+        "Uncertain Footing (Illusion) (AU)",
+        "Wither and Bloom (Necromancy) (AU)"
       ],
       "level3": [
         "Animate Dead (Necromancy)",
@@ -6904,22 +8182,36 @@
         "Clairvoyance (Divination)",
         "Counterspell (Abjuration)",
         "Dispel Magic (Abjuration)",
+        "Fear (Illusion)",
+        "Feign Death (Necromancy)",
         "Fireball (Evocation)",
         "Fly (Transmutation)",
         "Gaseous Form (Transmutation)",
+        "Glyph of Warding (Abjuration)",
         "Haste (Transmutation)",
         "Hypnotic Pattern (Illusion)",
+        "Leomund's Tiny Hut (Evocation)",
         "Lightning Bolt (Evocation)",
         "Magic Circle (Abjuration)",
+        "Major Image (Illusion)",
         "Nondetection (Abjuration)",
+        "Phantom Steed (Illusion)",
+        "Protection from Energy (Abjuration)",
         "Remove Curse (Abjuration)",
         "Sending (Divination)",
         "Sleet Storm (Conjuration)",
         "Slow (Transmutation)",
+        "Speak with Dead (Necromancy)",
+        "Stinking Cloud (Conjuration)",
+        "Summon Fey (Conjuration)",
+        "Summon Undead (Necromancy)",
         "Tongues (Divination)",
         "Vampiric Touch (Necromancy)",
+        "Water Breathing (Transmutation)",
         "Cacophonic Shield (Evocation) (HoF)",
+        "Catnap (Enchantment) (AU)",
         "Conjure Constructs (Conjuration) (HoF)",
+        "Inflict Doubt (Enchantment) (AU)",
         "Laerel's Silver Lance (Evocation) (HoF)",
         "Syluné's Viper (Conjuration) (HoF)"
       ]
@@ -6932,7 +8224,9 @@
         "Cure Wounds (Abjuration)",
         "Detect Evil and Good (Divination)",
         "Detect Magic (Divination)",
-        "Divine Favor (Evocation)",
+        "Detect Poison and Disease (Divination)",
+        "Divine Favor (Transmutation)",
+        "Divine Smite (Evocation)",
         "Heroism (Enchantment)",
         "Protection from Evil and Good (Abjuration)",
         "Purify Food and Drink (Transmutation)",
@@ -6945,13 +8239,16 @@
       "level2": [
         "Aid (Abjuration)",
         "Find Steed (Conjuration)",
+        "Gentle Repose (Necromancy)",
         "Lesser Restoration (Abjuration)",
         "Locate Object (Divination)",
         "Magic Weapon (Transmutation)",
+        "Prayer of Healing (Abjuration)",
         "Protection from Poison (Abjuration)",
+        "Shining Smite (Transmutation)",
+        "Warding Bond (Abjuration)",
         "Zone of Truth (Enchantment)",
-        "Branding Smite (Evocation)",
-        "Warding Bond (Abjuration)"
+        "Dueling Ground (Abjuration) (AU)"
       ],
       "level3": [
         "Aura of Vitality (Abjuration)",
@@ -6972,35 +8269,52 @@
         "Animal Friendship (Enchantment)",
         "Cure Wounds (Abjuration)",
         "Detect Magic (Divination)",
+        "Detect Poison and Disease (Divination)",
         "Ensnaring Strike (Conjuration)",
+        "Entangle (Conjuration)",
         "Fog Cloud (Conjuration)",
         "Goodberry (Conjuration)",
         "Hail of Thorns (Conjuration)",
+        "Hunter's Mark (Divination)",
         "Jump (Transmutation)",
         "Longstrider (Transmutation)",
         "Speak with Animals (Divination)"
       ],
       "level2": [
+        "Aid (Abjuration)",
         "Animal Messenger (Enchantment)",
-        "Barkskin (Abjuration)",
+        "Barkskin (Transmutation)",
+        "Beast Sense (Divination)",
+        "Cordon of Arrows (Transmutation)",
         "Darkvision (Transmutation)",
+        "Enhance Ability (Transmutation)",
         "Find Traps (Divination)",
+        "Gust of Wind (Evocation)",
         "Lesser Restoration (Abjuration)",
         "Locate Animals or Plants (Divination)",
         "Locate Object (Divination)",
+        "Magic Weapon (Transmutation)",
         "Pass without Trace (Abjuration)",
         "Protection from Poison (Abjuration)",
         "Silence (Illusion)",
-        "Spike Growth (Transmutation)"
+        "Spike Growth (Transmutation)",
+        "Summon Beast (Conjuration)",
+        "Dueling Ground (Abjuration) (AU)"
       ],
       "level3": [
         "Conjure Animals (Conjuration)",
+        "Conjure Barrage (Conjuration)",
         "Daylight (Evocation)",
-        "Lightning Arrow (Evocation)",
+        "Dispel Magic (Abjuration)",
+        "Elemental Weapon (Transmutation)",
+        "Lightning Arrow (Transmutation)",
+        "Meld into Stone (Transmutation)",
         "Nondetection (Abjuration)",
         "Plant Growth (Transmutation)",
         "Protection from Energy (Abjuration)",
+        "Revivify (Necromancy)",
         "Speak with Plants (Transmutation)",
+        "Summon Fey (Conjuration)",
         "Water Breathing (Transmutation)",
         "Water Walk (Transmutation)",
         "Wind Wall (Evocation)"
@@ -7046,33 +8360,41 @@
         "Aid (Abjuration)",
         "Alter Self (Transmutation)",
         "Arcane Lock (Abjuration)",
+        "Arcane Vigor (Abjuration)",
+        "Blur (Illusion)",
         "Continual Flame (Evocation)",
+        "Darkvision (Transmutation)",
+        "Dragon's Breath (Transmutation)",
+        "Dueling Ground (Abjuration) (AU)",
         "Enhance Ability (Transmutation)",
         "Enlarge/Reduce (Transmutation)",
         "Heat Metal (Transmutation)",
+        "Homunculus Servant (Conjuration)",
         "Invisibility (Illusion)",
         "Lesser Restoration (Abjuration)",
         "Levitate (Transmutation)",
+        "Magic Mouth (Illusion)",
         "Magic Weapon (Transmutation)",
         "Protection from Poison (Abjuration)",
         "Rope Trick (Transmutation)",
+        "See Invisibility (Divination)",
         "Spider Climb (Transmutation)",
+        "Uncertain Footing (Illusion) (AU)",
         "Web (Conjuration)"
       ],
       "level3": [
         "Blink (Transmutation)",
-        "Catnap (Enchantment)",
+        "Catnap (Enchantment) (AU)",
         "Create Food and Water (Conjuration)",
         "Dispel Magic (Abjuration)",
         "Elemental Weapon (Transmutation)",
-        "Flame Arrows (Transmutation)",
         "Fly (Transmutation)",
         "Glyph of Warding (Abjuration)",
         "Haste (Transmutation)",
         "Protection from Energy (Abjuration)",
         "Revivify (Necromancy)",
-        "Tiny Servant (Transmutation)",
-        "Wind Wall (Evocation)"
+        "Water Breathing (Transmutation)",
+        "Water Walk (Transmutation)"
       ]
     }
   },
@@ -7365,7 +8687,7 @@
     }
   },
   "note_warlock_table": "Warlock-Werte sind ein Richtwert basierend auf dem Wachstumsmuster der Pact-Magic-Tabelle; bitte bei hohen Stufen gegen das PHB prüfen.",
-  "note_general": "Die Zauberlisten enthalten eine breite Kernauswahl an Zaubertricks sowie Zaubern der Grade 1-3 je Klasse, sind aber keine 100%ig vollständige Abbildung aller im PHB verfügbaren Zauber. Grad 4+ ist in dieser Version nicht enthalten. Paladin und Ranger erhalten keine Zaubertricks (RAW), nur Zauber Grad 1-3.",
+  "note_general": "Die Zauberlisten (Zaubertricks und Grad 1-3) sind vollständig nach PHB 2024 (Kapitel 7, Klassenangabe je Zauber) inkl. 2024-Schulen, ergänzt um die Zauber aus Heroes of Faerûn (HoF) und Arcana Unleashed (AU); Artificer nach Eberron: Forge of the Artificer. Grad 4+ ist in den Auswahllisten nicht enthalten. Paladin und Ranger erhalten keine Zaubertricks (RAW), nur Zauber Grad 1-3.",
   "abilityScoreImprovement": {
     "name": "Ability Score Improvement (ASI)",
     "desc": "+2 auf ein Attribut ODER +1 auf zwei Attribute (max. 20)."
@@ -7918,7 +9240,7 @@
     },
     {
       "name": "Speedy",
-      "desc": "+10ft Speed.",
+      "desc": "Voraussetzung: Stufe 4+, DEX oder CON 13+. Speed Increase: Speed +10 ft. Dash over Difficult Terrain: Nach einer Dash-Action in deinem Zug kostet Difficult Terrain für den Rest des Zuges keine zusätzliche Bewegung. Agile Movement: Opportunity Attacks gegen dich haben Disadvantage.",
       "choice": {
         "type": "ability",
         "count": 1,
@@ -7930,7 +9252,8 @@
       },
       "sourceTag": "PHB",
       "sourceBook": "Player's Handbook 2024",
-      "pageRef": 208
+      "pageRef": 208,
+      "speedBonus": 10
     },
     {
       "name": "Spell Sniper",
@@ -8529,7 +9852,8 @@
           ],
           "note": "Magical Passage: immer vorbereitet, 1x/Long Rest ohne Slot."
         }
-      ]
+      ],
+      "speedBonus": 5
     },
     {
       "name": "Mark of Scribing",
@@ -8786,6 +10110,497 @@
         "cantripCount": 0,
         "level1Count": 1
       }
+    },
+    {
+      "name": "Abjuration Adept",
+      "desc": "Voraussetzung: Stufe 4+, Spellcasting oder Pact Magic. +1 INT/WIS/CHA (max. 20). Additional Spells: Sobald du Spell Slots des genannten Grades hast, sind die Zauber dieses und niedrigerer Grade immer vorbereitet: Grad 1: Shield, Grad 2: Lesser Restoration, Grad 3: Protection from Energy, Grad 4: Banishment, Grad 5: Mass Cure Wounds. Protective Ward: Abjuration-Zauber mit Slot → du oder eine sichtbare Kreatur innerhalb 30 ft erhält Temp HP = 2 × Slot-Grad.",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 33,
+      "prereq": {
+        "spellcasting": true
+      },
+      "choice": {
+        "type": "ability",
+        "count": 1,
+        "options": [
+          "Intelligence",
+          "Wisdom",
+          "Charisma"
+        ],
+        "label": "Attribut +1 (INT/WIS/CHA) – zugleich Zauberattribut der Adept-Zauber"
+      },
+      "autoSpellsBySlot": [
+        {
+          "slot": 1,
+          "spell": "Shield"
+        },
+        {
+          "slot": 2,
+          "spell": "Lesser Restoration"
+        },
+        {
+          "slot": 3,
+          "spell": "Protection from Energy"
+        },
+        {
+          "slot": 4,
+          "spell": "Banishment"
+        },
+        {
+          "slot": 5,
+          "spell": "Mass Cure Wounds"
+        }
+      ]
+    },
+    {
+      "name": "Conjuration Adept",
+      "desc": "Voraussetzung: Stufe 4+, Spellcasting oder Pact Magic. +1 INT/WIS/CHA (max. 20). Additional Spells: Sobald du Spell Slots des genannten Grades hast, sind die Zauber dieses und niedrigerer Grade immer vorbereitet: Grad 1: Entangle, Grad 2: Misty Step, Grad 3: Conjure Animals, Grad 4: Dimension Door, Grad 5: Conjure Elemental. Persistent Conjuration: Bonus auf CON-Saves für Concentration auf Conjuration-Zauber = Modifikator des durch dieses Feat erhöhten Attributs.",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 34,
+      "prereq": {
+        "spellcasting": true
+      },
+      "choice": {
+        "type": "ability",
+        "count": 1,
+        "options": [
+          "Intelligence",
+          "Wisdom",
+          "Charisma"
+        ],
+        "label": "Attribut +1 (INT/WIS/CHA) – zugleich Zauberattribut der Adept-Zauber"
+      },
+      "autoSpellsBySlot": [
+        {
+          "slot": 1,
+          "spell": "Entangle"
+        },
+        {
+          "slot": 2,
+          "spell": "Misty Step"
+        },
+        {
+          "slot": 3,
+          "spell": "Conjure Animals"
+        },
+        {
+          "slot": 4,
+          "spell": "Dimension Door"
+        },
+        {
+          "slot": 5,
+          "spell": "Conjure Elemental"
+        }
+      ]
+    },
+    {
+      "name": "Divination Adept",
+      "desc": "Voraussetzung: Stufe 4+, Spellcasting oder Pact Magic. +1 INT/WIS/CHA (max. 20). Additional Spells: Sobald du Spell Slots des genannten Grades hast, sind die Zauber dieses und niedrigerer Grade immer vorbereitet: Grad 1: Detect Evil and Good, Grad 2: Mind Spike, Grad 3: Clairvoyance, Grad 4: Divination, Grad 5: Scrying. Prescient Intervention: Reaction, wenn eine sichtbare Kreatur innerhalb 60 ft einen D20 Test macht – Advantage oder Disadvantage (deine Wahl); 1x/Long Rest, zurück auch durch Divination-Zauber mit Slot.",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 34,
+      "prereq": {
+        "spellcasting": true
+      },
+      "choice": {
+        "type": "ability",
+        "count": 1,
+        "options": [
+          "Intelligence",
+          "Wisdom",
+          "Charisma"
+        ],
+        "label": "Attribut +1 (INT/WIS/CHA) – zugleich Zauberattribut der Adept-Zauber"
+      },
+      "autoSpellsBySlot": [
+        {
+          "slot": 1,
+          "spell": "Detect Evil and Good"
+        },
+        {
+          "slot": 2,
+          "spell": "Mind Spike"
+        },
+        {
+          "slot": 3,
+          "spell": "Clairvoyance"
+        },
+        {
+          "slot": 4,
+          "spell": "Divination"
+        },
+        {
+          "slot": 5,
+          "spell": "Scrying"
+        }
+      ]
+    },
+    {
+      "name": "Enchantment Adept",
+      "desc": "Voraussetzung: Stufe 4+, Spellcasting oder Pact Magic. +1 INT/WIS/CHA (max. 20). Additional Spells: Sobald du Spell Slots des genannten Grades hast, sind die Zauber dieses und niedrigerer Grade immer vorbereitet: Grad 1: Dissonant Whispers, Grad 2: Enthrall, Grad 3: Hold Person, Grad 4: Dominate Beast, Grad 5: Modify Memory. Subtle Enchantments: Enchantment-Zauber mit Slot ohne V-, S- und M-Komponenten wirkbar (außer verbrauchte oder kostenpflichtige Materialien).",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 35,
+      "prereq": {
+        "spellcasting": true
+      },
+      "choice": {
+        "type": "ability",
+        "count": 1,
+        "options": [
+          "Intelligence",
+          "Wisdom",
+          "Charisma"
+        ],
+        "label": "Attribut +1 (INT/WIS/CHA) – zugleich Zauberattribut der Adept-Zauber"
+      },
+      "autoSpellsBySlot": [
+        {
+          "slot": 1,
+          "spell": "Dissonant Whispers"
+        },
+        {
+          "slot": 2,
+          "spell": "Enthrall"
+        },
+        {
+          "slot": 3,
+          "spell": "Hold Person"
+        },
+        {
+          "slot": 4,
+          "spell": "Dominate Beast"
+        },
+        {
+          "slot": 5,
+          "spell": "Modify Memory"
+        }
+      ]
+    },
+    {
+      "name": "Evocation Adept",
+      "desc": "Voraussetzung: Stufe 4+, Spellcasting oder Pact Magic. +1 INT/WIS/CHA (max. 20). Additional Spells: Sobald du Spell Slots des genannten Grades hast, sind die Zauber dieses und niedrigerer Grade immer vorbereitet: Grad 1: Chromatic Orb, Grad 2: Shatter, Grad 3: Fireball, Grad 4: Vitriolic Sphere, Grad 5: Wall of Force. Fueled Evocation: 1x pro Zug bei Evocation-Schaden bis zu 2 unverbrauchte Hit Point Dice würfeln und zu einem Schadenswurf addieren (Würfel verbraucht).",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 36,
+      "prereq": {
+        "spellcasting": true
+      },
+      "choice": {
+        "type": "ability",
+        "count": 1,
+        "options": [
+          "Intelligence",
+          "Wisdom",
+          "Charisma"
+        ],
+        "label": "Attribut +1 (INT/WIS/CHA) – zugleich Zauberattribut der Adept-Zauber"
+      },
+      "autoSpellsBySlot": [
+        {
+          "slot": 1,
+          "spell": "Chromatic Orb"
+        },
+        {
+          "slot": 2,
+          "spell": "Shatter"
+        },
+        {
+          "slot": 3,
+          "spell": "Fireball"
+        },
+        {
+          "slot": 4,
+          "spell": "Vitriolic Sphere"
+        },
+        {
+          "slot": 5,
+          "spell": "Wall of Force"
+        }
+      ]
+    },
+    {
+      "name": "Illusion Adept",
+      "desc": "Voraussetzung: Stufe 4+, Spellcasting oder Pact Magic. +1 INT/WIS/CHA (max. 20). Additional Spells: Sobald du Spell Slots des genannten Grades hast, sind die Zauber dieses und niedrigerer Grade immer vorbereitet: Grad 1: Silent Image, Grad 2: Phantasmal Force, Grad 3: Major Image, Grad 4: Hallucinatory Terrain, Grad 5: Seeming. Masterful Illusions: Illusion-Zauber mit Slot ohne V-, S- und M-Komponenten wirkbar (außer verbrauchte oder kostenpflichtige Materialien); Disadvantage auf INT (Investigation), um deine Illusionen zu durchschauen.",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 36,
+      "prereq": {
+        "spellcasting": true
+      },
+      "choice": {
+        "type": "ability",
+        "count": 1,
+        "options": [
+          "Intelligence",
+          "Wisdom",
+          "Charisma"
+        ],
+        "label": "Attribut +1 (INT/WIS/CHA) – zugleich Zauberattribut der Adept-Zauber"
+      },
+      "autoSpellsBySlot": [
+        {
+          "slot": 1,
+          "spell": "Silent Image"
+        },
+        {
+          "slot": 2,
+          "spell": "Phantasmal Force"
+        },
+        {
+          "slot": 3,
+          "spell": "Major Image"
+        },
+        {
+          "slot": 4,
+          "spell": "Hallucinatory Terrain"
+        },
+        {
+          "slot": 5,
+          "spell": "Seeming"
+        }
+      ]
+    },
+    {
+      "name": "Necromancy Adept",
+      "desc": "Voraussetzung: Stufe 4+, Spellcasting oder Pact Magic. +1 INT/WIS/CHA (max. 20). Additional Spells: Sobald du Spell Slots des genannten Grades hast, sind die Zauber dieses und niedrigerer Grade immer vorbereitet: Grad 1: Inflict Wounds, Grad 2: Ray of Enfeeblement, Grad 3: Vampiric Touch, Grad 4: Blight, Grad 5: Raise Dead. Life Manipulation: Necromancy-Zauber mit Slot → bis zu 2 unverbrauchte Hit Point Dice würfeln, HP = Wurf + Slot-Grad heilen (Würfel verbraucht).",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 37,
+      "prereq": {
+        "spellcasting": true
+      },
+      "choice": {
+        "type": "ability",
+        "count": 1,
+        "options": [
+          "Intelligence",
+          "Wisdom",
+          "Charisma"
+        ],
+        "label": "Attribut +1 (INT/WIS/CHA) – zugleich Zauberattribut der Adept-Zauber"
+      },
+      "autoSpellsBySlot": [
+        {
+          "slot": 1,
+          "spell": "Inflict Wounds"
+        },
+        {
+          "slot": 2,
+          "spell": "Ray of Enfeeblement"
+        },
+        {
+          "slot": 3,
+          "spell": "Vampiric Touch"
+        },
+        {
+          "slot": 4,
+          "spell": "Blight"
+        },
+        {
+          "slot": 5,
+          "spell": "Raise Dead"
+        }
+      ]
+    },
+    {
+      "name": "Transmutation Adept",
+      "desc": "Voraussetzung: Stufe 4+, Spellcasting oder Pact Magic. +1 INT/WIS/CHA (max. 20). Additional Spells: Sobald du Spell Slots des genannten Grades hast, sind die Zauber dieses und niedrigerer Grade immer vorbereitet: Grad 1: Jump, Grad 2: Spider Climb, Grad 3: Slow, Grad 4: Polymorph, Grad 5: Animate Objects. Magical Augmentation: in deinem Zug nach einem Transmutation-Zauber mit Slot Speed + 5 × Slot-Grad bis Zugende.",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 38,
+      "prereq": {
+        "spellcasting": true
+      },
+      "choice": {
+        "type": "ability",
+        "count": 1,
+        "options": [
+          "Intelligence",
+          "Wisdom",
+          "Charisma"
+        ],
+        "label": "Attribut +1 (INT/WIS/CHA) – zugleich Zauberattribut der Adept-Zauber"
+      },
+      "autoSpellsBySlot": [
+        {
+          "slot": 1,
+          "spell": "Jump"
+        },
+        {
+          "slot": 2,
+          "spell": "Spider Climb"
+        },
+        {
+          "slot": 3,
+          "spell": "Slow"
+        },
+        {
+          "slot": 4,
+          "spell": "Polymorph"
+        },
+        {
+          "slot": 5,
+          "spell": "Animate Objects"
+        }
+      ]
+    },
+    {
+      "name": "Elemental Familiar",
+      "desc": "Voraussetzung: Stufe 4+, Familiar Friend. +1 auf ein Attribut (max. 20). Elemental Energy: beim Wirken von Find Familiar Acid, Cold, Fire, Lightning oder Thunder wählen – Familiar hat Resistenz dagegen; Energy Pulse: Bonus Action (Familiar innerhalb 120 ft, nutzt seine Reaction): 5-ft-Emanation, DEX-Save (DC 8 + Zauberattribut-Mod für Find Familiar + PB), bei Fehlschlag 2d4 Schaden des Typs und Prone (Medium oder kleiner).",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 35,
+      "prereq": {
+        "feat": "Familiar Friend"
+      },
+      "choice": {
+        "type": "ability",
+        "count": 1,
+        "options": [
+          "all"
+        ],
+        "label": "Attribut +1 (beliebig, max. 20)"
+      }
+    },
+    {
+      "name": "Magic Connoisseur",
+      "desc": "Voraussetzung: Stufe 4+, Magic Initiate. +1 INT/WIS/CHA (max. 20). Additional Spells: ein Grad-1- und ein Grad-2-Zauber aus derselben Liste wie bei Magic Initiate, immer vorbereitet, je 1x/Long Rest ohne Slot, sonst mit Slots; Zauberattribut wie bei Magic Initiate. Spell Change: bei jedem Stufenaufstieg einen davon gegen einen gleichgradigen Zauber derselben Liste tauschen.",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 37,
+      "prereq": {
+        "feat": "Magic Initiate"
+      },
+      "choice": [
+        {
+          "type": "ability",
+          "count": 1,
+          "options": [
+            "Intelligence",
+            "Wisdom",
+            "Charisma"
+          ],
+          "label": "Attribut +1 (INT/WIS/CHA)"
+        },
+        {
+          "type": "magicConnoisseur",
+          "label": "Grad-1- und Grad-2-Zauber"
+        }
+      ]
+    },
+    {
+      "name": "Otherworldly Familiar",
+      "desc": "Voraussetzung: Stufe 4+, Familiar Friend. +1 auf ein Attribut (max. 20). Otherworldly Power: beim Wirken von Find Familiar – Familiar erhält Resistenz gegen Necrotic, Poison, Psychic, Radiant oder Thunder (Wahl) und Phase Walk (bewegt sich durch Kreaturen und Objekte wie durch Difficult Terrain; endet er in einem Objekt, wird er auf das letzte freie Feld geschoben).",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 37,
+      "prereq": {
+        "feat": "Familiar Friend"
+      },
+      "choice": {
+        "type": "ability",
+        "count": 1,
+        "options": [
+          "all"
+        ],
+        "label": "Attribut +1 (beliebig, max. 20)"
+      }
+    },
+    {
+      "name": "Soothing Familiar",
+      "desc": "Voraussetzung: Stufe 4+, Familiar Friend. +1 auf ein Attribut (max. 20). Healing Beacon: 5-ft-Emanation um den Familiar (innerhalb 120 ft von dir) – Verbündete darin behandeln bei Heilungswürfen 1 und 2 als 3.",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 38,
+      "prereq": {
+        "feat": "Familiar Friend"
+      },
+      "choice": {
+        "type": "ability",
+        "count": 1,
+        "options": [
+          "all"
+        ],
+        "label": "Attribut +1 (beliebig, max. 20)"
+      }
+    },
+    {
+      "name": "Spell Resistant",
+      "desc": "Voraussetzung: Stufe 4+. +1 DEX oder CON (max. 20). Magical Resilience: Resistenz gegen Necrotic, Psychic, Radiant oder Thunder (Wahl). Magic Resistant: bei einem misslungenen Save gegen Zauber/magischen Effekt +1d6 auf den Save; Proficiency-Bonus-mal pro Long Rest.",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 38,
+      "choice": [
+        {
+          "type": "ability",
+          "count": 1,
+          "options": [
+            "Dexterity",
+            "Constitution"
+          ],
+          "label": "Attribut +1 (DEX/CON)"
+        },
+        {
+          "type": "damageType",
+          "options": [
+            "Necrotic",
+            "Psychic",
+            "Radiant",
+            "Thunder"
+          ],
+          "label": "Magical Resilience – Resistenz"
+        }
+      ]
+    },
+    {
+      "name": "Spell Subterfuge",
+      "desc": "Voraussetzung: Stufe 4+, Spellcasting oder Pact Magic. +1 INT/WIS/CHA (max. 20). Shrouding Spells: nach einem Zauber mit Castingzeit Action (mit Slot) Dash und Hide zusammen als Bonus Action; Nutzungen = Modifikator des erhöhten Attributs pro Long Rest. Sneaky Casting: mit Invisible-Zustand aus Hide beenden V-Komponente oder Spell Attack ihn nicht, wenn du den Zug hinter Three-Quarters oder Total Cover beendest.",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 38,
+      "prereq": {
+        "spellcasting": true
+      },
+      "choice": {
+        "type": "ability",
+        "count": 1,
+        "options": [
+          "Intelligence",
+          "Wisdom",
+          "Charisma"
+        ],
+        "label": "Attribut +1 (INT/WIS/CHA)"
+      }
+    },
+    {
+      "name": "Warlike Familiar",
+      "desc": "Voraussetzung: Stufe 4+, Familiar Friend. +1 auf ein Attribut (max. 20). Battle Familiar: Zauber Battle Familiar immer vorbereitet, 1x/Long Rest ohne Slot, sonst mit Slots; Zauberattribut wie bei Familiar Friend. Intercept Attack: Reaction des Familiars, wenn eine Kreatur innerhalb 5 ft von ihm getroffen wird – +PB auf deren AC gegen diesen Angriff.",
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "pageRef": 39,
+      "prereq": {
+        "feat": "Familiar Friend"
+      },
+      "choice": {
+        "type": "ability",
+        "count": 1,
+        "options": [
+          "all"
+        ],
+        "label": "Attribut +1 (beliebig, max. 20)"
+      },
+      "autoGrantedSpells": [
+        {
+          "level": 1,
+          "spells": [
+            "Battle Familiar"
+          ],
+          "note": "Immer vorbereitet, 1x/Long Rest ohne Slot (Zauberattribut wie Familiar Friend)"
+        }
+      ]
     }
   ],
   "fightingStyles": [
@@ -8848,6 +10663,17 @@
       "desc": "Reaction: greift eine sichtbare Kreatur ein anderes Ziel binnen 5ft von dir an, kannst du dein Schild interponieren (falls getragen) – Disadvantage auf diesen Angriffswurf UND alle weiteren gegen das Ziel bis zu deinem nächsten Zug, solange du binnen 5ft bleibst.",
       "pageRef": 209,
       "sourceTag": "PHB"
+    },
+    {
+      "name": "Arcane Warrior",
+      "desc": "Du lernst 2 Wizard-Zaubertricks (empfohlen Mage Hand, Ray of Frost); Zauberattribut INT/WIS/CHA (bei Wahl). Bei jedem Stufenaufstieg darfst du einen gegen einen anderen Wizard-Zaubertrick tauschen.",
+      "pageRef": 39,
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed",
+      "cantripChoice": {
+        "classList": "wizard",
+        "count": 2
+      }
     }
   ],
   "gear": [
@@ -10109,7 +11935,7 @@
     "Dominate Person": 5,
     "Modify Memory": 5,
     "Guiding Bolt": 1,
-    "Magic Weapon": 1,
+    "Magic Weapon": 2,
     "Shield of Faith": 1,
     "Spiritual Weapon": 2,
     "Crusader's Mantle": 3,
@@ -10159,7 +11985,7 @@
     "Gust of Wind": 2,
     "Shatter": 2,
     "Thunderwave": 1,
-    "Water Breathing": 2,
+    "Water Breathing": 3,
     "Control Water": 4,
     "Conjure Elemental": 5,
     "Guidance": 0,
@@ -10247,7 +12073,108 @@
     "Arcane Lock": 2,
     "Find Familiar": 1,
     "Illusory Script": 1,
-    "Mage Hand": 0
+    "Mage Hand": 0,
+    "Nystul's Magic Aura": 2,
+    "Leomund's Secret Chest": 4,
+    "Bigby's Hand": 5,
+    "Battle Familiar": 2,
+    "Disruptive Tune": 2,
+    "Dueling Ground": 2,
+    "Uncertain Footing": 2,
+    "Wither and Bloom": 2,
+    "Catnap": 3,
+    "Inflict Doubt": 3,
+    "Homunculus Servant": 2,
+    "Water Walk": 3,
+    "Animate Dead": 3,
+    "Animal Messenger": 2,
+    "Arcane Vigor": 2,
+    "Armor of Agathys": 1,
+    "Augury": 2,
+    "Barkskin": 2,
+    "Beast Sense": 2,
+    "Bestow Curse": 3,
+    "Blinding Smite": 3,
+    "Blink": 3,
+    "Cloud of Daggers": 2,
+    "Color Spray": 1,
+    "Compelled Duel": 1,
+    "Continual Flame": 2,
+    "Cordon of Arrows": 2,
+    "Create Food and Water": 3,
+    "Create or Destroy Water": 1,
+    "Crown of Madness": 2,
+    "Darkvision": 2,
+    "Detect Evil and Good": 1,
+    "Divine Favor": 1,
+    "Elemental Weapon": 3,
+    "Enlarge/Reduce": 2,
+    "Entangle": 1,
+    "Enthrall": 2,
+    "Expeditious Retreat": 1,
+    "Feather Fall": 1,
+    "Feign Death": 3,
+    "Find Steed": 2,
+    "Find Traps": 2,
+    "Flame Blade": 2,
+    "Gentle Repose": 2,
+    "Glyph of Warding": 3,
+    "Goodberry": 1,
+    "Grease": 1,
+    "Hail of Thorns": 1,
+    "Heat Metal": 2,
+    "Inflict Wounds": 1,
+    "Jump": 1,
+    "Knock": 2,
+    "Leomund's Tiny Hut": 3,
+    "Levitate": 2,
+    "Lightning Arrow": 3,
+    "Locate Animals or Plants": 2,
+    "Magic Circle": 3,
+    "Major Image": 3,
+    "Meld into Stone": 3,
+    "Phantom Steed": 3,
+    "Prayer of Healing": 2,
+    "Protection from Poison": 2,
+    "Sanctuary": 1,
+    "Searing Smite": 1,
+    "Silence": 2,
+    "Silent Image": 1,
+    "Slow": 3,
+    "Speak with Plants": 3,
+    "Spider Climb": 2,
+    "Spike Growth": 2,
+    "Suggestion": 2,
+    "Summon Undead": 3,
+    "Tasha's Hideous Laughter": 1,
+    "Tenser's Floating Disk": 1,
+    "Vampiric Touch": 3,
+    "Warding Bond": 2,
+    "Wind Wall": 3,
+    "Witch Bolt": 1,
+    "Wrathful Smite": 1,
+    "Blindness/Deafness": 2,
+    "Dancing Lights": 0,
+    "Friends": 0,
+    "Light": 0,
+    "Prestidigitation": 0,
+    "True Strike": 0,
+    "Vicious Mockery": 0,
+    "Resistance": 0,
+    "Spare the Dying": 0,
+    "Thaumaturgy": 0,
+    "Toll the Dead": 0,
+    "Word of Radiance": 0,
+    "Druidcraft": 0,
+    "Poison Spray": 0,
+    "Produce Flame": 0,
+    "Shillelagh": 0,
+    "Thorn Whip": 0,
+    "Sorcerous Burst": 0,
+    "Eldritch Blast": 0,
+    "Divination": 4,
+    "Hallucinatory Terrain": 4,
+    "Animate Objects": 5
   },
   "fixedSpeciesCantrips": {
     "aasimar": {
@@ -10263,12 +12190,73 @@
     "Player's Handbook 2024",
     "Eberron: Forge of the Artificer",
     "Heroes of Faerûn",
-    "Ravenloft: The Horrors Within"
+    "Ravenloft: The Horrors Within",
+    "Arcana Unleashed"
   ],
-  "note_artificer": "Grad 1 und Zaubertricks sind wortwörtlich aus Eberron: Forge of the Artificer entnommen. Grad 2 und 3 sind aus dem klassischen, editionsübergreifend stabilen Artificer-Zauberrepertoire rekonstruiert (nicht wortwörtlich aus diesem Buch geprüft) – bei Abweichungen bitte im Buch gegenprüfen.",
+  "note_artificer": "Artificer-Zauberliste (Zaubertricks, Grad 1-3) vollständig und wortgetreu aus Eberron: Forge of the Artificer (Artificer Spell List) übernommen und gegengeprüft. Homunculus Servant ist der neue EFA-Zauber (Grad 2). Zusätzlich die Artificer-Zauber aus Arcana Unleashed (mit '(AU)' markiert).",
   "note_hof_spells": "19 komplett neue Zauber aus Heroes of Faerûn (Kapitel 5, alphabetisches Kompendium). Davon 9 mit Grad 1-3 direkt in die wählbaren Klassen-Zauberlisten integriert (am Namen mit '(HoF)' markiert). Die übrigen 10 (Grad 4-9) sind nur im Grad-Verzeichnis hinterlegt, da unsere Auswahllisten nur bis Grad 3 gehen - sie tauchen daher nirgends automatisch auf, da sie an keine automatische Subklassen-Funktion gekoppelt sind (anders als z.B. Domain/Oath Spells).",
   "note_weapons_pageref": "Waffentabellen (Simple/Martial, Melee/Ranged): PHB Kapitel 6, ab Seite 214.",
   "note_armor_pageref": "Rüstungstabelle: PHB Kapitel 6, ab Seite 219.",
   "note_tools_pageref": "Werkzeug-Tabellen (Artisan's Tools, Other Tools, Gaming Sets, Musical Instruments): PHB Kapitel 6, ab Seite 220.",
-  "note_gear_pageref": "Adventuring-Gear-Tabelle (inkl. Equipment Packs alphabetisch einsortiert, z.B. 'Burglar's Pack'): PHB Kapitel 6, ab Seite 221."
+  "note_gear_pageref": "Adventuring-Gear-Tabelle (inkl. Equipment Packs alphabetisch einsortiert, z.B. 'Burglar's Pack'): PHB Kapitel 6, ab Seite 221.",
+  "note_au_spells": "33 neue/überarbeitete Zauber aus Arcana Unleashed (Kapitel 2, Spells-Tabelle AU S. 43, PDF). Die 7 mit Grad 2-3 sind in die wählbaren Klassen-Zauberlisten integriert (am Namen mit '(AU)' markiert). Grad 4-9 sind noch nicht eingebunden. Arcana Unleashed enthält keine neuen Zaubertricks.",
+  "note_cantrips_phb": "Zaubertrick-Listen von Bard, Cleric, Druid, Sorcerer, Warlock und Wizard vollständig nach PHB 2024 (Kapitel 7, Klassenangaben je Zauber) inkl. 2024-Schulen (z.B. Acid Splash = Evocation, Produce Flame = Conjuration).",
+  "arcaneShotOptions": [
+    {
+      "name": "Banishing Shot",
+      "desc": "+1 Arcane Shot Die Psychic-Schaden; CHA-Save oder verbannt in harmlose Demiebene: Incapacitated, Speed 0; kehrt am Ende ihres nächsten Zuges an ihren Platz (oder nächsten freien) zurück.",
+      "pageRef": 14,
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed"
+    },
+    {
+      "name": "Beguiling Shot",
+      "desc": "+2 Arcane Shot Dice Psychic-Schaden; WIS-Save oder Charmed bis Beginn deines nächsten Zuges – Charmer bist du oder ein Verbündeter innerhalb 30 ft vom Ziel (deine Wahl). Endet, wenn der Charmer das Ziel angreift, schädigt oder zu einem Save zwingt.",
+      "pageRef": 14,
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed"
+    },
+    {
+      "name": "Bursting Shot",
+      "desc": "Direkt nach dem Schaden: Ziel und jede Kreatur in 10-ft-Emanation um das Ziel erleiden 2 Arcane Shot Dice Force-Schaden.",
+      "pageRef": 14,
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed"
+    },
+    {
+      "name": "Enfeebling Shot",
+      "desc": "+2 Arcane Shot Dice Necrotic-Schaden; CON-Save oder Poisoned bis Ende seines nächsten Zuges. Trifft das so vergiftete Ziel mit einem Angriff, zieht es 1 Arcane Shot Die vom Gesamtschaden ab.",
+      "pageRef": 14,
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed"
+    },
+    {
+      "name": "Grasping Shot",
+      "desc": "+1 Arcane Shot Die Slashing-Schaden; STR-Save oder Restrained (Dornenranken) für 1 Min. bzw. bis du diese Option erneut nutzt. Ziel oder Kreatur in Reichweite: Action für STR (Athletics) gegen deinen Arcane-Shot-DC, um es zu beenden.",
+      "pageRef": 14,
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed"
+    },
+    {
+      "name": "Piercing Shot",
+      "desc": "Kein Angriffswurf: Geschoss fliegt als 30-ft-Linie (1 ft breit) von dir aus, ignoriert Deckung (durchdringt feste Objekte). Jede Kreatur in der Linie: DEX-Save, bei Fehlschlag Treffer-Schaden + 2 Arcane Shot Dice Piercing, bei Erfolg die Hälfte.",
+      "pageRef": 14,
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed"
+    },
+    {
+      "name": "Seeking Shot",
+      "desc": "Kein Angriffswurf: Ziel ist eine Kreatur, die du in der letzten Minute gesehen hast; Geschoss fliegt um Ecken, ignoriert Half/Three-Quarters Cover. Innerhalb der Long Range: DEX-Save, Fehlschlag = Treffer-Schaden + 2 Arcane Shot Dice Force und du kennst den Aufenthaltsort; Erfolg = halber Schaden.",
+      "pageRef": 14,
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed"
+    },
+    {
+      "name": "Shadow Shot",
+      "desc": "+1 Arcane Shot Die Psychic-Schaden; WIS-Save oder Blinded bis Ende seines nächsten Zuges.",
+      "pageRef": 14,
+      "sourceTag": "AU",
+      "sourceBook": "Arcana Unleashed"
+    }
+  ]
 }

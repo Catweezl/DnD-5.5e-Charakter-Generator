@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>D&D 2024 Charakter-Generator V5</title>
+<title>D&D 2024 Charakter-Generator V6</title>
 <style>
   :root{
     --bg:#1b1512;--panel:#241b17;--accent:#b3542a;--accent2:#d99a4e;--text:#ecdfce;--muted:#a9998a;--border:#3a2c24;--input-bg:#12100e;--card-selected-bg:#241a12;
@@ -109,7 +109,7 @@
 <div class="wrap">
   <div class="topbar">
     <div style="width:120px;"></div>
-    <h1>⚔ D&D 2024 Charakter-Generator (V5)</h1>
+    <h1>⚔ D&D 2024 Charakter-Generator (V6)</h1>
     <div class="theme-toggle">
       <span>☀</span>
       <label class="switch"><input type="checkbox" id="themeSwitch"><span class="slider"></span></label>
@@ -120,7 +120,7 @@
   <div class="steps" id="stepsNav"></div>
   <div id="liveAbilityBar"></div>
   <div id="app"></div>
-  <footer>D&D 2024 (5.5e) &middot; Kein offizielles Wizards-of-the-Coast-Produkt &middot; Version 5</footer>
+  <footer>D&D 2024 (5.5e) &middot; Kein offizielles Wizards-of-the-Coast-Produkt &middot; Version 6</footer>
 </div>
 
 <script>
@@ -5157,7 +5157,7 @@ function exportDoc(){
   const remaining = (totalAvailableGold() - cartTotal()).toFixed(2);
   x += wBox('COINS', wPara(`${remaining} GP (Budget: ${totalAvailableGold()} GP)`));
 
-  x += wPara('Erstellt mit dem D&D-2024-Charakter-Generator (V5). Bitte alle Werte in deinen offiziellen Charakterbogen übertragen und mit deinem DM abstimmen.', {spacingAfter:0});
+  x += wPara('Erstellt mit dem D&D-2024-Charakter-Generator (V6). Bitte alle Werte in deinen offiziellen Charakterbogen übertragen und mit deinem DM abstimmen.', {spacingAfter:0});
 
   downloadDocx(x, (state.charName||'charakter')+'.docx');
 }
