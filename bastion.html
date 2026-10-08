@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dessarin-Anwesen – Bastion Tracker</title>
+<style>
+  :root{
+    --bg:#1b1512;--panel:#241b17;--panel2:#2c211b;--accent:#b3542a;--accent2:#d99a4e;--text:#ecdfce;--muted:#a9998a;--border:#3a2c24;--input-bg:#12100e;
+    --ok:#7fae6a;--warn:#d9a74e;--bad:#d0634a;--bar:#3a2c24;
+  }
+  [data-theme="light"]{
+    --bg:#f7f1e8;--panel:#ffffff;--panel2:#fbf5ec;--accent:#a8461f;--accent2:#8a4a12;--text:#2a2018;--muted:#6b5c4d;--border:#d8c9b4;--input-bg:#ffffff;
+    --ok:#4d7f3a;--warn:#a8701c;--bad:#b2402a;--bar:#e8dccb;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:Georgia,'Times New Roman',serif;font-size:15px;line-height:1.45;transition:background .2s,color .2s;}
+  button,input,select,textarea{font-family:inherit;font-size:14px;}
+  h1,h2,h3,h4{font-weight:normal;margin:0;}
+  .wrap{max-width:1280px;margin:0 auto;padding:0 16px 48px;}
+
+  /* Header */
+  header.top{position:sticky;top:0;z-index:10;background:var(--bg);border-bottom:1px solid var(--border);margin-bottom:18px;}
+  .top-inner{max-width:1280px;margin:0 auto;padding:12px 16px;display:flex;flex-wrap:wrap;gap:12px 20px;align-items:center;justify-content:space-between;}
+  .brand h1{font-size:22px;color:var(--accent2);letter-spacing:.5px;}
+  .brand .sub{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1.5px;}
+  .clock{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+  .daybox{text-align:center;padding:4px 14px;border:1px solid var(--accent);border-radius:6px;background:var(--panel);}
+  .daybox .big{font-size:22px;color:var(--accent2);line-height:1.1;}
+  .daybox .small{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+  .tools{display:flex;gap:6px;flex-wrap:wrap;}
+
+  .btn{background:var(--panel2);color:var(--text);border:1px solid var(--border);border-radius:5px;padding:6px 11px;cursor:pointer;white-space:nowrap;}
+  .btn:hover{border-color:var(--accent2);}
+  .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;}
+  .btn.primary:hover{filter:brightness(1.1);}
+  .btn.small{padding:3px 8px;font-size:12px;}
+  .btn.ghost{background:transparent;}
+  .btn.danger{color:var(--bad);}
+  .btn:disabled{opacity:.45;cursor:not-allowed;}
+
+  input,select,textarea{background:var(--input-bg);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:5px 7px;}
+  input[type=number]{width:80px;}
+  label.f{display:flex;flex-direction:column;gap:3px;font-size:12px;color:var(--muted);}
+  label.f > *{color:var(--text);font-size:14px;}
+
+  .layout{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:20px;align-items:start;}
+  @media (max-width:980px){.layout{grid-template-columns:minmax(0,1fr);}}
+  @media (max-width:640px){header.top{position:static;}}
+
+  .panel{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin-bottom:16px;}
+  .panel > h2{font-size:17px;color:var(--accent2);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;gap:8px;}
+  .panel > h2 .hint{font-size:12px;color:var(--muted);}
+  .muted{color:var(--muted);}
+  .tiny{font-size:12px;}
+
+  /* Characters */
+  .chars{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;}
+  @media (max-width:640px){.chars{grid-template-columns:1fr;}}
+  .char{border:1px solid var(--border);border-radius:6px;padding:10px 12px;background:var(--panel2);}
+  .char .nm{font-size:15px;}
+  .char .row{display:flex;justify-content:space-between;align-items:center;margin-top:6px;gap:8px;}
+  .slots{display:flex;gap:4px;margin-top:8px;flex-wrap:wrap;}
+  .slot{width:16px;height:16px;border-radius:3px;border:1px solid var(--accent2);}
+  .slot.used{background:var(--accent2);}
+  .slot.over{background:var(--bad);border-color:var(--bad);}
+  .scale{width:100%;border-collapse:collapse;margin-top:10px;font-size:12px;}
+  .scale td,.scale th{border-top:1px solid var(--border);padding:4px 6px;text-align:center;}
+  .scale th{color:var(--muted);font-weight:normal;}
+  .scale tr.cur td{color:var(--accent2);}
+
+  /* Facilities */
+  .owner-group{margin-bottom:22px;}
+  .owner-head{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--border);padding-bottom:5px;margin-bottom:10px;gap:10px;flex-wrap:wrap;}
+  .owner-head h3{font-size:18px;}
+  .fac-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:12px;}
+  @media (max-width:420px){.fac-grid{grid-template-columns:1fr;}}
+  .fac{min-width:0;background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;}
+  .fac.over{border-color:var(--bad);}
+  .fac.empty{border-style:dashed;align-items:center;justify-content:center;min-height:120px;color:var(--muted);}
+  .fac-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start;}
+  .fac-head .t{font-size:17px;}
+  .fac-head .l{font-size:12px;color:var(--muted);font-style:italic;}
+  .badge{display:inline-block;font-size:11px;padding:1px 7px;border-radius:10px;border:1px solid var(--accent);color:var(--accent2);text-transform:uppercase;letter-spacing:.8px;white-space:nowrap;}
+  .badge.ok{border-color:var(--ok);color:var(--ok);}
+  .badge.warn{border-color:var(--warn);color:var(--warn);}
+  .badge.bad{border-color:var(--bad);color:var(--bad);}
+  .meta{font-size:12px;color:var(--muted);}
+  .meta b{color:var(--text);font-weight:normal;}
+  .job{border:1px solid var(--border);border-radius:6px;padding:8px 10px;background:var(--panel2);}
+  .job.done{border-color:var(--ok);}
+  .job .jt{display:flex;justify-content:space-between;gap:8px;}
+  .job .jt span:first-child{font-size:14px;}
+  .bar{height:6px;background:var(--bar);border-radius:3px;overflow:hidden;margin:6px 0 4px;}
+  .bar > i{display:block;height:100%;background:var(--accent2);}
+  .job.done .bar > i{background:var(--ok);}
+  .job .acts{display:flex;gap:6px;justify-content:flex-end;margin-top:4px;}
+  .form{border:1px dashed var(--accent);border-radius:6px;padding:10px;display:flex;flex-direction:column;gap:8px;background:var(--panel2);}
+  .form .row{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;}
+  .form .preview{font-size:13px;color:var(--accent2);}
+  .form select{max-width:100%;}
+  .fac-foot{display:flex;gap:6px;flex-wrap:wrap;justify-content:space-between;align-items:center;margin-top:auto;}
+  textarea.notes{width:100%;min-height:38px;resize:vertical;font-size:13px;}
+  .checks{max-height:180px;overflow:auto;border:1px solid var(--border);border-radius:4px;padding:6px;}
+  .checks label{display:flex;gap:6px;align-items:center;font-size:13px;padding:2px 0;}
+
+  /* Sidebar */
+  .kv{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:4px 0;}
+  .status-dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:middle;}
+  .status-dot.ok{background:var(--ok);} .status-dot.warn{background:var(--warn);} .status-dot.off{background:var(--border);}
+  .money{font-size:22px;color:var(--accent2);}
+  .lager{width:100%;border-collapse:collapse;font-size:13px;}
+  .lager td{border-top:1px solid var(--border);padding:4px 3px;vertical-align:middle;}
+  .lager td.num{text-align:right;white-space:nowrap;}
+  .lager .qty{display:inline-flex;align-items:center;gap:3px;}
+  .log{max-height:340px;overflow:auto;font-size:13px;}
+  .log div{border-top:1px solid var(--border);padding:4px 0;}
+  .log .d{color:var(--muted);font-size:11px;margin-right:6px;}
+  .event{border-left:3px solid var(--accent);padding:6px 10px;background:var(--panel2);margin-top:8px;font-size:13px;}
+  .event b{color:var(--accent2);font-weight:normal;}
+
+  .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;padding:8px 16px;border-radius:6px;opacity:0;transition:opacity .25s;pointer-events:none;z-index:50;max-width:90vw;}
+  .toast.show{opacity:1;}
+  .notice{font-size:12px;color:var(--warn);}
+  .sep{border:none;border-top:1px solid var(--border);margin:10px 0;}
+  footer{font-size:11px;color:var(--muted);text-align:center;margin-top:20px;}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <div class="brand">
+      <h1>Das Dessarin-Anwesen</h1>
+      <div class="sub">Bastion Tracker · DM-Ansicht · D&amp;D 2024</div>
+    </div>
+    <div class="clock">
+      <div class="daybox"><div class="big" id="dayBig">Tag 1</div><div class="small" id="daySmall">Tenday 1 · Tag 1/10</div></div>
+      <div class="tools">
+        <button class="btn" data-a="day" data-n="1">+1 Tag</button>
+        <button class="btn primary" data-a="turn">Nächster Bastion Turn ▸</button>
+        <button class="btn ghost" data-a="setday">Tag setzen</button>
+      </div>
+    </div>
+    <div class="tools">
+      <button class="btn ghost small" data-a="export">Export</button>
+      <button class="btn ghost small" data-a="import">Import</button>
+      <button class="btn ghost small" data-a="theme" id="themeBtn">☀</button>
+      <input type="file" id="importFile" accept="application/json,.json" hidden>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="layout">
+    <main>
+      <section class="panel">
+        <h2>Charaktere &amp; Special Facilities <span class="hint">Stufe ändern → Slots passen sich an</span></h2>
+        <div class="chars" id="chars"></div>
+        <table class="scale" id="scale"></table>
+      </section>
+      <div id="facilities"></div>
+    </main>
+
+    <aside>
+      <section class="panel" id="siegelPanel"></section>
+      <section class="panel" id="charmPanel"></section>
+      <section class="panel" id="kassePanel"></section>
+      <section class="panel" id="eventPanel"></section>
+      <section class="panel" id="logPanel"></section>
+    </aside>
+  </div>
+  <footer>Inoffizielles Fan-Tool unter der Fan Content Policy von Wizards of the Coast. Daten werden lokal im Browser gespeichert – zur Sicherung regelmäßig exportieren.</footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===================== Hilfsfunktionen ===================== */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const uid = () => Math.random().toString(36).slice(2, 9);
+const GP = 100, SP = 10, CP = 1;
+function fmt(cp){
+  cp = Math.round(cp || 0);
+  const neg = cp < 0; cp = Math.abs(cp);
+  const g = Math.floor(cp / 100), s = Math.floor((cp % 100) / 10), c = cp % 10;
+  const parts = [];
+  if (g) parts.push(g.toLocaleString('de-DE') + ' GP');
+  if (s) parts.push(s + ' SP');
+  if (c) parts.push(c + ' CP');
+  return (neg ? '−' : '') + (parts.join(' ') || '0 GP');
+}
+function roll(expr){ // "1W4", "2W6"
+  const m = /^(\d+)W(\d+)$/i.exec(expr.trim()); if (!m) return {total:0, rolls:[]};
+  const rolls = []; for (let i = 0; i < +m[1]; i++) rolls.push(1 + Math.floor(Math.random() * +m[2]));
+  return {total: rolls.reduce((a, b) => a + b, 0), rolls};
+}
+function toast(msg){ const t = $('#toast'); t.textContent = msg; t.classList.add('show'); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), 2600); }
+const slotsFor = lvl => lvl >= 17 ? 6 : lvl >= 13 ? 5 : lvl >= 9 ? 4 : lvl >= 5 ? 2 : 0;
+const tendayOf = d => Math.floor((d - 1) / 10) + 1;
+const dayInTenday = d => ((d - 1) % 10) + 1;
+
+/* ===================== Regeldaten ===================== */
+// Offizielle Special Facilities (DMG 2024) – Mindeststufe & Order
+const CATALOG = {
+  arcane_study:{name:'Arcane Study',lvl:5,order:'Craft'}, armory:{name:'Armory',lvl:5,order:'Trade'},
+  barrack:{name:'Barrack',lvl:5,order:'Recruit'}, garden:{name:'Garden',lvl:5,order:'Harvest'},
+  library:{name:'Library',lvl:5,order:'Research'}, sanctuary:{name:'Sanctuary',lvl:5,order:'Craft'},
+  smithy:{name:'Smithy',lvl:5,order:'Craft'}, storehouse:{name:'Storehouse',lvl:5,order:'Trade'},
+  workshop:{name:'Workshop',lvl:5,order:'Craft'},
+  gaming_hall:{name:'Gaming Hall',lvl:9,order:'Trade'}, greenhouse:{name:'Greenhouse',lvl:9,order:'Harvest'},
+  laboratory:{name:'Laboratory',lvl:9,order:'Craft'}, sacristy:{name:'Sacristy',lvl:9,order:'Craft'},
+  scriptorium:{name:'Scriptorium',lvl:9,order:'Craft'}, stable:{name:'Stable',lvl:9,order:'Trade'},
+  teleportation_circle:{name:'Teleportation Circle',lvl:9,order:'Recruit'}, theater:{name:'Theater',lvl:9,order:'Empower'},
+  training_area:{name:'Training Area',lvl:9,order:'Empower'}, trophy_room:{name:'Trophy Room',lvl:9,order:'Research'},
+  archive:{name:'Archive',lvl:13,order:'Research'}, meditation_chamber:{name:'Meditation Chamber',lvl:13,order:'Empower'},
+  menagerie:{name:'Menagerie',lvl:13,order:'Recruit'}, observatory:{name:'Observatory',lvl:13,order:'Empower'},
+  pub:{name:'Pub',lvl:13,order:'Research'}, reliquary:{name:'Reliquary',lvl:13,order:'Harvest'},
+  demiplane:{name:'Demiplane',lvl:17,order:'Empower'}, guildhall:{name:'Guildhall',lvl:17,order:'Recruit'},
+  sanctum:{name:'Sanctum',lvl:17,order:'Empower'}, war_room:{name:'War Room',lvl:17,order:'Recruit'}
+};
+const MULTI_ALLOWED = ['garden']; // darf mehrfach vorhanden sein
+
+// [Name, VK in CP, Material in CP, Tage]
+const WORKSHOP = [
+  {tool:"Jeweler's Tools", hireling:'Elaynie', items:[
+    ['Arcane Focus',20*GP,10*GP,2],['Holy Symbol',5*GP,2*GP,1]]},
+  {tool:"Woodcarver's Tools", hireling:'Elaynie', items:[
+    ['Shortbow',25*GP,12*GP,3],['Longbow',50*GP,25*GP,5],['Hand Crossbow',75*GP,37*GP,8],['Light Crossbow',25*GP,12*GP,3],
+    ['Heavy Crossbow',50*GP,25*GP,5],['Quarterstaff',2*SP,1*SP,1],['Club',1*SP,1,1],['Greatclub',2*SP,1*SP,1],
+    ['Arcane Focus (Holz)',20*GP,10*GP,2],['Druidic Focus',5*GP,2*GP,1],['Arrows (20 Stk.)',1*GP,5*SP,1],['Bolts (20 Stk.)',1*GP,5*SP,1],
+    ['Ink Pen',2,1,1],['Needles (50 Stk.)',5*GP,2*GP,1],
+    ['Hammerköpfe „Blunts“ (20 Stk.)',1*GP,5*SP,1],['Hammerköpfe Variante (20 Stk.)',25*SP,12*SP,1],
+    ['Breitköpfe (20 Stk.)',1*GP,5*SP,1],['Breitköpfe Variante (20 Stk.)',25*SP,12*SP,1],
+    ['Korkenzieherpfeile (20 Stk.)',3*GP,15*SP,1],['Seilpfeile (5 Stk.)',3*GP,15*SP,1]]},
+  {tool:"Weaver's Tools", hireling:'Elaynie', items:[
+    ['Padded Armor',5*GP,2*GP,1],['Robe',1*GP,5*SP,1],['Fine Clothes',15*GP,7*GP,2],["Traveler's Clothes",2*GP,1*GP,1],
+    ['Blanket',5*SP,2*SP,1],['Bedroll',1*GP,5*SP,1],['Net',1*GP,5*SP,1],['Rope (18 m)',1*GP,5*SP,1],['Sack',1,1,1],
+    ['Basket',4*SP,2*SP,1],['String (30 m)',1*SP,1,1],['Tent (2 Personen)',2*GP,1*GP,1]]},
+  {tool:"Tinker's Tools", hireling:'Am & Boss', items:[
+    ['Lock (einfach)',10*GP,5*GP,1],['Lock (gut)',25*GP,12*GP,3],['Manacles',2*GP,1*GP,1],['Mirror (Stahl)',5*GP,2*GP,1],
+    ['Hunting Trap',5*GP,2*GP,1],['Bullseye Lantern',10*GP,5*GP,1],['Hooded Lantern',5*GP,2*GP,1],['Tinderbox',5*SP,2*SP,1],
+    ['Signal Whistle',5,1,1],['Bell',1*GP,5*SP,1],['Flask',2,1,1],['Shovel',2*GP,1*GP,1],
+    ['Pistol',250*GP,125*GP,25],['Musket',500*GP,250*GP,50],
+    ['Feuerpfeile (10 Stk.)',3*GP,15*SP,1],['Blendpfeile (5 Stk.)',3*GP,15*SP,1],['Rauchpfeile (5 Stk.)',3*GP,15*SP,1]]},
+  {tool:"Glassblower's Tools", hireling:'Am & Boss', items:[
+    ['Vial',1*GP,5*SP,1],['Glass Bottle',2*GP,1*GP,1],['Magnifying Glass',100*GP,50*GP,10],['Spyglass',1000*GP,500*GP,100]]},
+  {tool:"Leatherworker's Tools", hireling:'Am & Boss', items:[
+    ['Leather Armor',10*GP,5*GP,1],['Studded Leather Armor',45*GP,22*GP,5],['Hide Armor',10*GP,5*GP,1],['Sling',1*SP,1,1],
+    ['Whip',2*GP,1*GP,1],['Backpack',2*GP,1*GP,1],['Crossbow Bolt Case',1*GP,5*SP,1],['Map/Scroll Case',1*GP,5*SP,1],
+    ['Pouch',5*SP,2*SP,1],['Quiver',1*GP,5*SP,1],['Waterskin',2*SP,1*SP,1]]}
+];
+const MAGIC_CRAFT = [ // ab Level 9 (Workshop / Arcane Study)
+  ['Common Magic Item',0,50*GP,5],['Uncommon Magic Item',0,200*GP,10]
+];
+const SANCTUARY = [
+  ['Holy Symbol',5*GP,0,10],['Druidic Focus (Holzstab)',5*GP,0,10],['Holy Water (2W6)',25*GP,0,10],
+  ['Holy Water (+1W8)',25*GP,100*GP,10],['Holy Water (+2W8)',25*GP,200*GP,10],['Holy Water (+3W8)',25*GP,300*GP,10],
+  ['Holy Water (+4W8)',25*GP,400*GP,10],['Holy Water (+5W8, Max.)',25*GP,500*GP,10]
+];
+const ARCANE = [['Arcane Focus',20*GP,0,10],['Leeres Buch',25*GP,10*GP,10]];
+
+// Homebrew Garden / Greenhouse: [Produkt, Würfel, Abklingzeit in Tagen, Wert pro Stück in CP (0 = unbekannt), Info]
+const HARVEST = {
+  garden:[
+    ['Potion of Healing','1W4',0,50*GP,'Heilkräuter (einfach) · 2W4+2 HP'],
+    ['Basic Poison','1W4',0,100*GP,'Injury · CON 10 · +1W4 Gift, 1 Min.'],
+    ["Assassin's Blood",'1W4',0,0,'Ingested · CON 10 · 1W12 + Poisoned 24h']
+  ],
+  greenhouse:[
+    ['Potion of Healing','1W6',0,50*GP,'Einfach · 2W4+2 HP'],
+    ['Potion of Greater Healing','1W4',10,0,'Mittel · 4W4+4 HP'],
+    ['Potion of Superior Healing','1W2',20,0,'Schwer · 8W4+8 HP'],
+    ['Fruit of Restoration (3 Früchte)','1W1',0,0,'Lesser Restoration · 24h haltbar'],
+    ['Basic Poison','1W6',0,100*GP,'Einfach · Injury · CON 10'],
+    ["Assassin's Blood",'1W6',0,0,'Einfach · Ingested · CON 10'],
+    ['Malice','1W4',10,0,'Mittel · Inhaled · CON 15'],
+    ['Oil of Taggit','1W4',10,0,'Mittel · Contact · CON 13'],
+    ['Truth Serum','1W4',10,0,'Mittel · Ingested · CON 11'],
+    ['Pale Tincture','1W2',20,0,'Schwer · Ingested · CON 16'],
+    ['Torpor','1W2',20,0,'Schwer · Ingested · CON 15']
+  ]
+};
+const STORE_LIMIT = lvl => lvl >= 13 ? 5000*GP : lvl >= 9 ? 2000*GP : 500*GP;
+const STORE_MARKUP = lvl => lvl >= 17 ? 1.0 : lvl >= 13 ? 0.5 : lvl >= 9 ? 0.2 : 0.1;
+
+// Bastion Events (DMG 2024) – Kurzfassung, Details im DMG
+const EVENTS = [
+  [1,50,'All Is Well','Keine besonderen Vorkommnisse. (Optional Flavour-Tabelle im DMG würfeln.)'],
+  [51,55,'Attack','Feindliche Kräfte greifen an. 6W6 würfeln – je 1 stirbt ein Bastion Defender. Ohne Defender: eine zufällige Special Facility ist im nächsten Bastion Turn stillgelegt.'],
+  [56,58,'Criminal Hireling','Ein Hireling hat eine kriminelle Vergangenheit. Behörden erscheinen: Bestechung 1W6 × 100 GP oder der Hireling wird abgeführt (Facility bis Ersatz ohne diesen Hireling).'],
+  [59,63,'Extraordinary Opportunity','Eine besondere Gelegenheit (Investition/Patronage). Wird sie für 500 GP angenommen, erneut würfeln (dieses Ergebnis ignorieren). Details DMG.'],
+  [64,72,'Friendly Visitors','Freundliche Besucher nutzen eine Special Facility und zahlen dafür 1W6 × 100 GP.'],
+  [73,76,'Guest','Ein Gast trifft ein (Gasttyp per W4 laut DMG, z. B. berühmte Person, Diplomat, Söldner). Bleibt eine Zeit und bringt ggf. Vorteile.'],
+  [77,79,'Lost Hirelings','Die Hirelings einer zufälligen Special Facility verschwinden. Die Facility kann im nächsten Bastion Turn keine Order ausführen.'],
+  [80,83,'Magical Discovery','Die Hirelings entdecken/fertigen kostenlos einen Uncommon Magic Item (Trank oder Spruchrolle).'],
+  [84,91,'Refugees','2W4 Flüchtlinge suchen Schutz. Sie bieten 1W6 × 100 GP und bleiben bis ein neues Zuhause gefunden ist.'],
+  [92,98,'Request for Aid','Örtliche Obrigkeit bittet um Hilfe. Defender entsenden: je Defender 1W6, Summe ≥ 10 = Erfolg, Belohnung 1W6 × 100 GP. Sonst halbe Belohnung und 1 Defender stirbt.'],
+  [99,100,'Treasure','Die Hirelings finden einen Schatz (Wurf auf die Schatztabelle im DMG).']
+];
+
+/* ===================== Zustand ===================== */
+const LS_KEY = 'dessarin-bastion-v1';
+function fac(id, type, name, label, owner, hirelings, location, extra = {}){
+  return Object.assign({id, type, name, label, owner, hirelings, location, jobs:[], cooldownUntil:0, notes:''}, extra);
+}
+function defaultState(){
+  return {
+    version:1, day:1, kasseCP:0, theme:'dark',
+    chars:[
+      {id:'kaelan', name:'Kaelan Nachtfluch', level:5},
+      {id:'aelar', name:'Aelar Frostschatten', level:5},
+      {id:'vyrraks', name:'Vyrraks der Schleicher', level:5}
+    ],
+    facilities:[
+      fac('f_sanct','sanctuary','Sanctuary','Kapelle der Ruhenden Flamme','kaelan','Flynt Lagan (Hauskaplan)','Rechts vom Haupthaus'),
+      fac('f_arcane','arcane_study','Arcane Study','','kaelan','Peren Graumantel (Butler)','Haupthaus EG · Geheimtür zum Keller'),
+      fac('f_garden1','garden','Garden 1','Offene Beete','aelar','Gon Grünmoos · Della Ahrenfeld','Gartenbereich'),
+      fac('f_garden2','garden','Garden 2','Zerfallenes Gewächshaus','aelar','Gon Grünmoos · Della Ahrenfeld','Gartenbereich',{upgradeTo:'greenhouse', notes:'Glasdach marode – nur als einfacher Garten nutzbar. Restaurierung → Greenhouse ab Level 9.'}),
+      fac('f_workshop','workshop','Workshop','','vyrraks','Am & Boss Eisenschlag · Elaynie Fadenglanz','Nebengebäude EG'),
+      fac('f_store','storehouse','Storehouse','','vyrraks','Meister Orlin (Verwalter)','Nebengebäude EG')
+    ],
+    charms:{sanctuary:0, arcane_study:0},
+    siegel:{lastUsed:null},
+    lager:[],
+    lastEvent:null,
+    log:[{day:1, text:'Tracker angelegt – Dessarin-Anwesen bei Stufe 5.'}]
+  };
+}
+let S;
+try { S = JSON.parse(localStorage.getItem(LS_KEY)) || defaultState(); } catch(e){ S = defaultState(); }
+const UI = {openForm:null, formType:{}};
+function save(){ try { localStorage.setItem(LS_KEY, JSON.stringify(S)); } catch(e){} }
+function log(text){ S.log.unshift({day:S.day, text}); if (S.log.length > 400) S.log.length = 400; }
+const charById = id => S.chars.find(c => c.id === id);
+const facById = id => S.facilities.find(f => f.id === id);
+const ownerLevel = f => (charById(f.owner) || {level:0}).level;
+
+/* ===================== Zeit ===================== */
+function advance(n){
+  const from = S.day; S.day += n;
+  S.facilities.forEach(f => f.jobs.forEach(j => {
+    if (!j.notified && S.day >= j.end){ j.notified = true; log(`Fertig: ${f.name} – ${j.title}. Bereit zum Abschließen.`); }
+  }));
+  S.facilities.forEach(f => { if (f.cooldownUntil && from < f.cooldownUntil && S.day >= f.cooldownUntil) log(`${f.name}: Abklingzeit vorbei.`); });
+  for (const k in S.charms){ if (S.charms[k] && S.day >= S.charms[k]){ S.charms[k] = 0; log(`${k === 'sanctuary' ? 'Sanctuary' : 'Arcane Study'} Charm abgelaufen.`); } }
+  if (S.siegel.lastUsed != null && from < S.siegel.lastUsed + 20 && S.day >= S.siegel.lastUsed + 20) log('Siegelring wieder bereit (Hinreise).');
+}
+
+/* ===================== Aufträge ===================== */
+function addLager(name, qty, unitCP){
+  const it = S.lager.find(x => x.name === name && x.unitCP === unitCP);
+  if (it) it.qty += qty; else S.lager.push({id:uid(), name, qty, unitCP});
+}
+function createJob(f, data){
+  const j = Object.assign({id:uid(), start:S.day, notified:false}, data);
+  if (j.paid && j.matCP) S.kasseCP -= j.matCP;
+  f.jobs.push(j);
+  log(`Order (${j.order}) · ${f.name}: ${j.title}${j.qty > 1 ? ' ×' + j.qty : ''} – fertig an Tag ${j.end}${j.matCP ? ', Kosten ' + fmt(j.matCP) : ''}.`);
+}
+function completeJob(f, j){
+  let msg = '';
+  if (j.kind === 'craft'){
+    addLager(j.title, j.qty, j.unitCP); msg = `${j.title} ×${j.qty} ins Lager.`;
+  } else if (j.kind === 'harvest'){
+    const r = roll(j.dice); const n = j.multiplier ? r.total * j.multiplier : r.total;
+    addLager(j.title, n, j.unitCP);
+    if (j.cooldown) f.cooldownUntil = S.day + j.cooldown;
+    msg = `Ernte ${j.dice} = ${r.total}${j.multiplier ? ' ×' + j.multiplier : ''} → ${n}× ${j.title}${j.cooldown ? ` · Abklingzeit bis Tag ${f.cooldownUntil}` : ''}.`;
+  } else if (j.kind === 'buy'){
+    addLager(j.title, 1, j.matCP); msg = `Trade Goods eingetroffen: ${j.title} (${fmt(j.matCP)}).`;
+  } else if (j.kind === 'sell'){
+    S.kasseCP += j.payoutCP; msg = `Verkauf abgeschlossen: +${fmt(j.payoutCP)} in die Kasse.`;
+  } else {
+    msg = `${j.title} abgeschlossen.`;
+  }
+  f.jobs = f.jobs.filter(x => x !== j);
+  log(`${f.name}: ${msg}`); toast(msg);
+}
+function cancelJob(f, j){
+  if (!confirm(`Auftrag „${j.title}“ abbrechen?`)) return;
+  if (j.paid && j.matCP) S.kasseCP += j.matCP;
+  if (j.kind === 'sell' && j.items) j.items.forEach(it => addLager(it.name, it.qty, it.unitCP));
+  f.jobs = f.jobs.filter(x => x !== j);
+  log(`${f.name}: Auftrag „${j.title}“ abgebrochen${j.paid && j.matCP ? ' (Kosten erstattet)' : ''}.`);
+}
+
+/* ===================== Rendering ===================== */
+function render(){
+  document.documentElement.setAttribute('data-theme', S.theme);
+  $('#themeBtn').textContent = S.theme === 'dark' ? '☀' : '☾';
+  const toTurn = 10 - dayInTenday(S.day) + 1;
+  $('#dayBig').textContent = 'Tag ' + S.day;
+  $('#daySmall').textContent = `Tenday ${tendayOf(S.day)} · Tag ${dayInTenday(S.day)}/10`;
+  renderChars(); renderFacilities(); renderSiegel(); renderCharms(); renderKasse(); renderEvents(); renderLog();
+  save();
+}
+function renderChars(){
+  $('#chars').innerHTML = S.chars.map(c => {
+    const max = slotsFor(c.level), used = S.facilities.filter(f => f.owner === c.id).length;
+    let boxes = '';
+    for (let i = 0; i < Math.max(max, used); i++) boxes += `<span class="slot ${i < used ? (i >= max ? 'over' : 'used') : ''}"></span>`;
+    return `<div class="char">
+      <div class="nm">${esc(c.name)}</div>
+      <div class="row"><label class="f">Stufe<input type="number" min="1" max="20" value="${c.level}" data-a="level" data-id="${c.id}"></label>
+      <div class="tiny muted" style="text-align:right">${used} / ${max} Special Facilities</div></div>
+      <div class="slots">${boxes || '<span class="tiny muted">Bastion ab Stufe 5</span>'}</div>
+    </div>`;
+  }).join('');
+  const lvls = S.chars.map(c => c.level);
+  const rows = [[5,2],[9,4],[13,5],[17,6]];
+  $('#scale').innerHTML = `<tr><th>Stufe</th>${rows.map(r => `<th>${r[0]}+</th>`).join('')}</tr>
+    <tr><td class="muted">pro Charakter</td>${rows.map(r => `<td>${r[1]}</td>`).join('')}</tr>
+    <tr class="cur"><td class="muted">Gruppe gesamt</td>${rows.map(r => `<td>${r[1] * 3}</td>`).join('')}</tr>
+    <tr><td class="muted">aktuell</td><td colspan="4">${S.chars.reduce((a, c) => a + slotsFor(c.level), 0)} Slots · ${S.facilities.length} belegt${lvls.some(l => l !== lvls[0]) ? ' · unterschiedliche Stufen' : ''}</td></tr>`;
+}
+function jobHTML(f, j){
+  const total = Math.max(1, j.end - j.start), done = Math.min(total, Math.max(0, S.day - j.start));
+  const ready = S.day >= j.end;
+  return `<div class="job ${ready ? 'done' : ''}">
+    <div class="jt"><span>${esc(j.title)}${j.qty > 1 ? ' <span class="muted">×' + j.qty + '</span>' : ''}</span>
+      <span class="badge ${ready ? 'ok' : ''}">${ready ? 'fertig' : 'noch ' + (j.end - S.day) + ' T'}</span></div>
+    <div class="bar"><i style="width:${Math.round(done / total * 100)}%"></i></div>
+    <div class="meta">${esc(j.order)} · Tag ${j.start} → ${j.end}${j.hireling ? ' · ' + esc(j.hireling) : ''}${j.matCP ? ' · Kosten ' + fmt(j.matCP) + (j.paid ? '' : ' (extern)') : ''}${j.kind === 'sell' ? ' · Erlös ' + fmt(j.payoutCP) : ''}${j.kind === 'harvest' ? ' · Ertrag ' + esc(j.dice) : ''}${j.info ? ' · ' + esc(j.info) : ''}</div>
+    <div class="acts">
+      <button class="btn small ghost danger" data-a="cancel" data-f="${f.id}" data-j="${j.id}">Abbrechen</button>
+      <button class="btn small ${ready ? 'primary' : ''}" data-a="complete" data-f="${f.id}" data-j="${j.id}" ${ready ? '' : 'title="Vorzeitig abschließen"'}>${ready ? (j.kind === 'harvest' ? 'Ernten &amp; würfeln' : 'Abschließen') : 'Sofort fertig'}</button>
+    </div></div>`;
+}
+function optsItems(list, prefix){ return list.map((it, i) => `<option value="${prefix}|${i}">${esc(it[0])} — VK ${it[1] ? fmt(it[1]) : '–'} · Mat. ${fmt(it[2])} · ${it[3]} T</option>`).join(''); }
+function formHTML(f){
+  const lvl = ownerLevel(f), t = f.type;
+  const qty = `<label class="f">Menge<input type="number" name="qty" min="1" value="1"></label>`;
+  const nameOv = `<label class="f" style="flex:1">Bezeichnung (optional)<input name="label" placeholder="z. B. konkretes Item"></label>`;
+  const paid = `<label class="tiny muted" style="display:flex;gap:5px;align-items:center"><input type="checkbox" name="paid" checked> Kosten aus Bastion-Kasse</label>`;
+  const btns = `<div class="row" style="justify-content:flex-end"><button class="btn small ghost" data-a="closeform">Abbrechen</button><button class="btn small primary" data-a="submit" data-f="${f.id}">Order erteilen</button></div>`;
+  let body = '';
+  if (t === 'workshop' || t === 'sanctuary' || t === 'arcane_study'){
+    let opts = '';
+    if (t === 'workshop') opts = WORKSHOP.map((g, gi) => `<optgroup label="${esc(g.tool)} – ${esc(g.hireling)}">${optsItems(g.items, 'w' + gi)}</optgroup>`).join('');
+    if (t === 'sanctuary') opts = `<optgroup label="Sanctuary – Flynt Lagan">${optsItems(SANCTUARY, 's')}</optgroup>`;
+    if (t === 'arcane_study') opts = `<optgroup label="Arcane Study – Peren">${optsItems(ARCANE, 'a')}</optgroup>`;
+    if ((t === 'workshop' || t === 'arcane_study') && lvl >= 9) opts += `<optgroup label="Magic Items (ab Stufe 9)">${optsItems(MAGIC_CRAFT, 'm')}</optgroup>`;
+    body = `<label class="f">Gegenstand<select name="item" data-a="preview">${opts}</select></label>
+      <div class="row">${qty}${nameOv}</div>${paid}<div class="preview" data-preview></div>`;
+    if ((t === 'workshop' || t === 'arcane_study') && lvl < 9) body += `<div class="tiny muted">Magic Items ab Stufe 9 (Besitzer aktuell Stufe ${lvl}).</div>`;
+  } else if (t === 'garden' || t === 'greenhouse'){
+    const list = HARVEST[t];
+    const blocked = f.cooldownUntil && S.day < f.cooldownUntil;
+    body = `${blocked ? `<div class="notice">Abklingzeit aktiv bis Tag ${f.cooldownUntil} – Ernte nur nach DM-Entscheid.</div>` : ''}
+      <label class="f">Ernte<select name="item" data-a="preview">${list.map((h, i) => `<option value="h|${i}">${esc(h[0])} — ${h[1]}${h[2] ? ' · Abklingzeit ' + h[2] / 10 + ' Tenday' : ''}</option>`).join('')}</select></label>
+      <div class="preview" data-preview></div><div class="tiny muted">Harvest dauert 1 Tenday. Ertrag wird beim Abschließen gewürfelt.${t === 'greenhouse' ? ' Mischbetrieb: Würfel halbieren (DM).' : ''}</div>`;
+  } else if (t === 'storehouse'){
+    const mode = UI.formType[f.id] || 'buy';
+    const limit = STORE_LIMIT(lvl), mk = STORE_MARKUP(lvl);
+    body = `<div class="row"><button class="btn small ${mode === 'buy' ? 'primary' : ''}" data-a="storemode" data-f="${f.id}" data-m="buy">Einkaufen</button>
+      <button class="btn small ${mode === 'sell' ? 'primary' : ''}" data-a="storemode" data-f="${f.id}" data-m="sell">Verkaufen</button>
+      <span class="tiny muted">Stufe ${lvl}: Einkauf max. ${fmt(limit)} · Verkauf +${Math.round(mk * 100)} %</span></div>`;
+    if (mode === 'buy'){
+      body += `<div class="row"><label class="f">Betrag (GP)<input type="number" name="gp" min="1" max="${limit / GP}" value="${Math.min(480, limit / GP)}"></label>
+        <label class="f" style="flex:1">Ware<input name="label" placeholder="Trade Goods (z. B. Getreide, Stoffe)"></label></div>${paid}`;
+    } else {
+      body += S.lager.length ? `<div class="checks">${S.lager.map(it => `<label><input type="checkbox" name="sell" value="${it.id}" data-a="preview"> ${esc(it.name)} ×${it.qty} <span class="muted">(${it.unitCP ? fmt(it.unitCP * it.qty) : 'Wert unbekannt'})</span></label>`).join('')}</div>
+        <label class="f">Zusatzwert ohne Lagereintrag (GP)<input type="number" name="extra" min="0" value="0" data-a="preview"></label>
+        <div class="preview" data-preview></div>` : `<div class="tiny muted">Lager ist leer. Zusatzwert manuell eintragen:</div><label class="f">Warenwert (GP)<input type="number" name="extra" min="0" value="0" data-a="preview"></label><div class="preview" data-preview></div>`;
+    }
+  } else {
+    const c = CATALOG[t] || {order:'Craft'};
+    body = `<div class="row"><label class="f">Order<select name="order">${['Craft','Empower','Harvest','Recruit','Research','Trade'].map(o => `<option ${o === c.order ? 'selected' : ''}>${o}</option>`).join('')}</select></label>
+      <label class="f">Dauer (Tage)<input type="number" name="days" min="1" value="10"></label>
+      <label class="f">Kosten (GP)<input type="number" name="gp" min="0" value="0"></label></div>
+      <label class="f">Beschreibung<input name="label" placeholder="Was wird gemacht?"></label>${paid}`;
+  }
+  return `<div class="form" data-form="${f.id}">${body}${btns}</div>`;
+}
+function facHTML(f, overLimit){
+  const c = CATALOG[f.type] || {name:f.type, order:'–'};
+  const lvl = ownerLevel(f);
+  const cd = f.cooldownUntil && S.day < f.cooldownUntil;
+  const status = f.jobs.length ? `<span class="badge">${f.jobs.length} Order</span>` : cd ? `<span class="badge warn">Abklingzeit</span>` : `<span class="badge ok">frei</span>`;
+  const owners = S.chars.map(ch => `<option value="${ch.id}" ${ch.id === f.owner ? 'selected' : ''}>${esc(ch.name.split(' ')[0])}</option>`).join('');
+  const canUpgrade = f.upgradeTo && lvl >= (CATALOG[f.upgradeTo]?.lvl || 99);
+  return `<div class="fac ${overLimit ? 'over' : ''}">
+    <div class="fac-head"><div><div class="t">${esc(f.name)}</div>${f.label ? `<div class="l">${esc(f.label)}</div>` : ''}</div>
+      <div style="text-align:right"><span class="badge">${esc(c.order)}</span><div style="margin-top:4px">${status}</div></div></div>
+    <div class="meta">Hireling: <b>${esc(f.hirelings || '–')}</b>${f.location ? ` · ${esc(f.location)}` : ''}</div>
+    ${cd ? `<div class="notice">Abklingzeit bis Tag ${f.cooldownUntil} (noch ${f.cooldownUntil - S.day} T)</div>` : ''}
+    ${overLimit ? `<div class="notice" style="color:var(--bad)">Über dem Slot-Limit der aktuellen Stufe.</div>` : ''}
+    ${f.jobs.map(j => jobHTML(f, j)).join('')}
+    ${UI.openForm === f.id ? formHTML(f) : ''}
+    <textarea class="notes" placeholder="Notizen…" data-a="notes" data-f="${f.id}">${esc(f.notes)}</textarea>
+    <div class="fac-foot">
+      <span class="tiny muted">Besitzer <select data-a="owner" data-f="${f.id}" style="font-size:12px;padding:2px 4px">${owners}</select></span>
+      <span style="display:flex;gap:6px">
+        ${canUpgrade ? `<button class="btn small" data-a="upgrade" data-f="${f.id}">→ ${esc(CATALOG[f.upgradeTo].name)}</button>` : ''}
+        <button class="btn small ghost danger" data-a="remove" data-f="${f.id}" title="Facility entfernen">✕</button>
+        ${UI.openForm === f.id ? '' : `<button class="btn small primary" data-a="openform" data-f="${f.id}">+ Order</button>`}
+      </span>
+    </div></div>`;
+}
+function renderFacilities(){
+  let html = '';
+  S.chars.forEach(ch => {
+    const list = S.facilities.filter(f => f.owner === ch.id), max = slotsFor(ch.level);
+    const free = max - list.length;
+    const avail = Object.entries(CATALOG).filter(([k, v]) => v.lvl <= ch.level && (MULTI_ALLOWED.includes(k) || !S.facilities.some(f => f.type === k)));
+    html += `<section class="owner-group"><div class="owner-head"><h3>${esc(ch.name)}</h3><span class="tiny muted">Stufe ${ch.level} · ${list.length}/${max} Special Facilities</span></div><div class="fac-grid">`;
+    html += list.map((f, i) => facHTML(f, i >= max)).join('');
+    for (let i = 0; i < free; i++){
+      html += `<div class="fac empty"><div>Freier Slot <span class="tiny">(noch offen)</span></div>
+        <select data-a="addfac" data-owner="${ch.id}" style="margin-top:8px;max-width:90%"><option value="">+ Facility zuweisen…</option>
+        ${[5,9,13,17].map(l => { const g = avail.filter(([, v]) => v.lvl === l); return g.length ? `<optgroup label="Stufe ${l}">${g.map(([k, v]) => `<option value="${k}">${v.name} (${v.order})</option>`).join('')}</optgroup>` : ''; }).join('')}
+        </select></div>`;
+    }
+    html += `</div></section>`;
+  });
+  const orphans = S.facilities.filter(f => !charById(f.owner));
+  if (orphans.length) html += `<section class="owner-group"><div class="owner-head"><h3>Ohne Besitzer</h3></div><div class="fac-grid">${orphans.map(f => facHTML(f, false)).join('')}</div></section>`;
+  $('#facilities').innerHTML = html;
+  document.querySelectorAll('[data-form]').forEach(updatePreview);
+}
+function renderSiegel(){
+  const s = S.siegel, next = s.lastUsed == null ? null : s.lastUsed + 20;
+  const ready = next == null || S.day >= next;
+  $('#siegelPanel').innerHTML = `<h2>Siegel des Dessarin-Anwesens <span class="hint">Kaelan</span></h2>
+    <div class="kv"><span><span class="status-dot ${ready ? 'ok' : 'warn'}"></span>Hinreise (Portal)</span><span>${ready ? 'bereit' : `ab Tag ${next} (noch ${next - S.day} T)`}</span></div>
+    <div class="kv"><span><span class="status-dot ok"></span>Rückreise</span><span class="muted">jederzeit (Rückkehrkreis)</span></div>
+    <div class="kv tiny muted"><span>Zuletzt benutzt</span><span>${s.lastUsed == null ? '–' : 'Tag ' + s.lastUsed}</span></div>
+    <div class="tiny muted" style="margin:6px 0">1× alle 2 Tendays · Action · goldenes Torm-Portal für 1 Minute · bis zu 6 Kreaturen → Portalraum im Keller.</div>
+    <div class="tools"><button class="btn small primary" data-a="siegel" ${ready ? '' : 'disabled'}>Portal geöffnet (heute)</button>
+    <button class="btn small ghost" data-a="siegelreset">Zurücksetzen</button></div>`;
+}
+function renderCharms(){
+  const rows = [['sanctuary','Sanctuary Charm','Healing Word 1× ohne Spell Slot'],['arcane_study','Arcane Study Charm','Identify 1× ohne Slot/Komponenten']]
+    .filter(([k]) => S.facilities.some(f => f.type === k));
+  const ws = S.facilities.some(f => f.type === 'workshop');
+  $('#charmPanel').innerHTML = `<h2>Charms &amp; Boni <span class="hint">nach Long Rest in der Bastion</span></h2>
+    ${rows.map(([k, n, d]) => { const u = S.charms[k]; return `<div class="kv"><span><span class="status-dot ${u ? 'ok' : 'off'}"></span>${n}<br><span class="tiny muted">${d}</span></span>
+      <span>${u ? `<span class="tiny">bis Tag ${u}</span> <button class="btn small" data-a="charmuse" data-k="${k}">genutzt</button>` : `<button class="btn small" data-a="charm" data-k="${k}">Long Rest</button>`}</span></div>`; }).join('') || '<div class="tiny muted">Keine Charm-Facilities.</div>'}
+    ${ws ? `<hr class="sep"><div class="tiny muted"><b style="color:var(--text);font-weight:normal">Workshop · Source of Inspiration:</b> Short Rest im Workshop → Heroic Inspiration (1× pro Long Rest).</div>` : ''}`;
+}
+function renderKasse(){
+  const total = S.lager.reduce((a, it) => a + (it.unitCP || 0) * it.qty, 0);
+  $('#kassePanel').innerHTML = `<h2>Kasse &amp; Lager</h2>
+    <div class="kv"><span class="money" style="${S.kasseCP < 0 ? 'color:var(--bad)' : ''}">${fmt(S.kasseCP)}</span>
+      <span class="tools"><input type="number" id="kasseIn" placeholder="GP" style="width:70px"><button class="btn small" data-a="kasse" data-s="1">+</button><button class="btn small" data-a="kasse" data-s="-1">−</button></span></div>
+    <hr class="sep">
+    ${S.lager.length ? `<table class="lager">${S.lager.map(it => `<tr><td>${esc(it.name)}</td>
+      <td class="num"><span class="qty"><button class="btn small ghost" data-a="lq" data-id="${it.id}" data-d="-1">−</button>${it.qty}<button class="btn small ghost" data-a="lq" data-id="${it.id}" data-d="1">+</button></span></td>
+      <td class="num muted">${it.unitCP ? fmt(it.unitCP * it.qty) : '–'}</td>
+      <td class="num"><button class="btn small ghost danger" data-a="ldel" data-id="${it.id}">✕</button></td></tr>`).join('')}
+      <tr><td class="muted">Lagerwert (Standard-VK)</td><td></td><td class="num">${fmt(total)}</td><td></td></tr></table>` : '<div class="tiny muted">Lager leer – fertige Aufträge landen hier.</div>'}
+    <div class="row" style="display:flex;gap:6px;margin-top:8px"><input id="lName" placeholder="Gegenstand" style="flex:1;min-width:0"><input id="lQty" type="number" value="1" min="1" style="width:52px"><input id="lVal" type="number" placeholder="GP/Stk" style="width:70px"><button class="btn small" data-a="ladd">+</button></div>`;
+}
+function renderEvents(){
+  const e = S.lastEvent;
+  $('#eventPanel').innerHTML = `<h2>Maintain &amp; Bastion Events</h2>
+    <div class="tiny muted">Maintain gilt für die ganze Bastion. Wird in einem Bastion Turn keine andere Order erteilt bzw. Maintain gewählt, auf die Event-Tabelle würfeln (W100).</div>
+    <div class="tools" style="margin-top:8px"><button class="btn small primary" data-a="event">Maintain → Event würfeln</button></div>
+    ${e ? `<div class="event"><b>W100 = ${e.roll} · ${esc(e.name)}</b> <span class="tiny muted">(Tag ${e.day})</span><br>${esc(e.text)}${e.extra ? `<br><span class="muted">${esc(e.extra)}</span>` : ''}</div>` : ''}`;
+}
+function renderLog(){
+  $('#logPanel').innerHTML = `<h2>Logbuch <button class="btn small ghost" data-a="clearlog">leeren</button></h2>
+    <div class="row" style="display:flex;gap:6px;margin-bottom:6px"><input id="logIn" placeholder="Eigener Eintrag…" style="flex:1;min-width:0"><button class="btn small" data-a="addlog">+</button></div>
+    <div class="log">${S.log.slice(0, 150).map(l => `<div><span class="d">Tag ${l.day}</span>${esc(l.text)}</div>`).join('')}</div>`;
+}
+
+/* ===================== Formular-Logik ===================== */
+function pickItem(f, val){
+  const [p, i] = val.split('|'); const idx = +i;
+  if (p === 's') return {it:SANCTUARY[idx], hireling:'Flynt Lagan'};
+  if (p === 'a') return {it:ARCANE[idx], hireling:'Peren Graumantel'};
+  if (p === 'm') return {it:MAGIC_CRAFT[idx], hireling:f.type === 'arcane_study' ? 'Peren Graumantel' : 'Workshop'};
+  if (p === 'h') return {it:HARVEST[f.type][idx]};
+  const g = WORKSHOP[+p.slice(1)]; return {it:g.items[idx], hireling:g.hireling + ' · ' + g.tool};
+}
+function selectedSell(form){
+  return [...form.querySelectorAll('input[name=sell]:checked')].map(cb => S.lager.find(x => x.id === cb.value)).filter(Boolean);
+}
+function updatePreview(form){
+  const f = facById(form.dataset.form), pv = form.querySelector('[data-preview]'); if (!pv) return;
+  const sel = form.querySelector('select[name=item]');
+  if (f.type === 'storehouse'){
+    const items = selectedSell(form), extra = (+form.querySelector('[name=extra]')?.value || 0) * GP;
+    const base = items.reduce((a, it) => a + (it.unitCP || 0) * it.qty, 0) + extra;
+    const mk = STORE_MARKUP(ownerLevel(f));
+    pv.textContent = `Warenwert ${fmt(base)} → Erlös ${fmt(Math.floor(base * (1 + mk)))} (+${Math.round(mk * 100)} %) · fertig an Tag ${S.day + 10}`;
+    return;
+  }
+  if (!sel) return;
+  const {it} = pickItem(f, sel.value);
+  if (f.type === 'garden' || f.type === 'greenhouse'){
+    pv.textContent = `${it[4]} · Ertrag ${it[1]}${it[3] ? ' · Wert ' + fmt(it[3]) + '/Stk' : ''} · fertig an Tag ${S.day + 10}`;
+    return;
+  }
+  const q = Math.max(1, +form.querySelector('[name=qty]').value || 1);
+  const days = it[3] * q;
+  pv.textContent = `Material ${fmt(it[2] * q)} · Dauer ${days} Tag${days > 1 ? 'e' : ''} (fertig an Tag ${S.day + days})${it[1] ? ' · Wert ' + fmt(it[1] * q) : ''}`;
+}
+function submitForm(f){
+  const form = document.querySelector(`[data-form="${f.id}"]`); if (!form) return;
+  const val = n => form.querySelector(`[name=${n}]`);
+  const paid = val('paid') ? val('paid').checked : false;
+  const label = (val('label')?.value || '').trim();
+  const t = f.type;
+  if (t === 'workshop' || t === 'sanctuary' || t === 'arcane_study'){
+    const {it, hireling} = pickItem(f, val('item').value);
+    const q = Math.max(1, +val('qty').value || 1);
+    createJob(f, {kind:'craft', order:'Craft', title:label || it[0], qty:q, unitCP:it[1], matCP:it[2] * q, paid, end:S.day + it[3] * q, hireling});
+  } else if (t === 'garden' || t === 'greenhouse'){
+    const {it} = pickItem(f, val('item').value);
+    const fruit = it[1] === '1W1';
+    createJob(f, {kind:'harvest', order:'Harvest', title:it[0], qty:1, dice:fruit ? '1W1' : it[1], multiplier:0, cooldown:it[2], unitCP:it[3], end:S.day + 10, info:it[4]});
+  } else if (t === 'storehouse'){
+    const mode = UI.formType[f.id] || 'buy', lvl = ownerLevel(f);
+    if (mode === 'buy'){
+      const gp = Math.max(0, +val('gp').value || 0), limit = STORE_LIMIT(lvl);
+      if (gp * GP > limit && !confirm(`Über dem Einkaufslimit von ${fmt(limit)} – trotzdem?`)) return;
+      createJob(f, {kind:'buy', order:'Trade', title:label || 'Trade Goods', qty:1, matCP:gp * GP, paid, end:S.day + 10, hireling:'Meister Orlin'});
+    } else {
+      const items = selectedSell(form), extra = (+val('extra')?.value || 0) * GP;
+      const base = items.reduce((a, it) => a + (it.unitCP || 0) * it.qty, 0) + extra;
+      if (!items.length && !extra){ toast('Nichts zum Verkaufen ausgewählt.'); return; }
+      const payout = Math.floor(base * (1 + STORE_MARKUP(lvl)));
+      S.lager = S.lager.filter(x => !items.includes(x));
+      const title = items.length ? 'Verkauf: ' + items.map(i => i.name + ' ×' + i.qty).join(', ') : 'Verkauf';
+      createJob(f, {kind:'sell', order:'Trade', title, qty:1, payoutCP:payout, items:items.map(i => ({...i})), end:S.day + 10, hireling:'Meister Orlin'});
+    }
+  } else {
+    const days = Math.max(1, +val('days').value || 10), gp = Math.max(0, +val('gp').value || 0);
+    createJob(f, {kind:'generic', order:val('order').value, title:label || (CATALOG[t]?.name || 'Order'), qty:1, matCP:gp * GP, paid, end:S.day + days});
+  }
+  UI.openForm = null; render();
+}
+
+/* ===================== Events ===================== */
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-a]'); if (!b || b.tagName === 'SELECT' || b.tagName === 'INPUT' || b.tagName === 'TEXTAREA') return;
+  const a = b.dataset.a, f = b.dataset.f ? facById(b.dataset.f) : null;
+  switch (a){
+    case 'day': advance(+b.dataset.n); break;
+    case 'turn': { const n = 10 - dayInTenday(S.day) + 1; advance(n); log(`— Bastion Turn ${tendayOf(S.day)} beginnt (Tag ${S.day}). Neue Orders erteilen. —`); toast(`Bastion Turn ${tendayOf(S.day)} · Tag ${S.day}`); break; }
+    case 'setday': { const v = prompt('Aktueller Tag (seit Ankunft im Anwesen):', S.day); if (v && +v >= 1){ const n = Math.floor(+v); if (n > S.day) advance(n - S.day); else S.day = n; log(`Tag auf ${S.day} gesetzt.`); } else return; break; }
+    case 'theme': S.theme = S.theme === 'dark' ? 'light' : 'dark'; break;
+    case 'export': {
+      const blob = new Blob([JSON.stringify(S, null, 2)], {type:'application/json'});
+      const u = URL.createObjectURL(blob), l = document.createElement('a');
+      l.href = u; l.download = `dessarin-bastion-tag${S.day}.json`; document.body.appendChild(l); l.click(); l.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000);
+      return;
+    }
+    case 'import': $('#importFile').click(); return;
+    case 'openform': UI.openForm = f.id; break;
+    case 'closeform': UI.openForm = null; break;
+    case 'submit': submitForm(f); return;
+    case 'storemode': UI.formType[f.id] = b.dataset.m; break;
+    case 'complete': { const j = f.jobs.find(x => x.id === b.dataset.j); if (j) completeJob(f, j); break; }
+    case 'cancel': { const j = f.jobs.find(x => x.id === b.dataset.j); if (j) cancelJob(f, j); break; }
+    case 'remove': if (!confirm(`${f.name} entfernen? Laufende Orders gehen verloren.`)) return; S.facilities = S.facilities.filter(x => x !== f); log(`Facility entfernt: ${f.name}.`); break;
+    case 'upgrade': { const to = CATALOG[f.upgradeTo]; if (!confirm(`${f.name} zu ${to.name} aufwerten?`)) return; f.type = f.upgradeTo; f.name = to.name; f.label = 'Restauriertes Gewächshaus'; f.notes = ''; delete f.upgradeTo; log(`${to.name} freigeschaltet (Upgrade von Garden 2).`); break; }
+    case 'siegel': S.siegel.lastUsed = S.day; log('Siegelring benutzt – Portal zum Anwesen geöffnet.'); break;
+    case 'siegelreset': S.siegel.lastUsed = null; log('Siegelring-Cooldown zurückgesetzt.'); break;
+    case 'charm': S.charms[b.dataset.k] = S.day + 10; log(`${b.dataset.k === 'sanctuary' ? 'Sanctuary' : 'Arcane Study'} Charm erhalten (bis Tag ${S.day + 10}).`); break;
+    case 'charmuse': S.charms[b.dataset.k] = 0; log(`${b.dataset.k === 'sanctuary' ? 'Sanctuary' : 'Arcane Study'} Charm eingesetzt.`); break;
+    case 'kasse': { const v = +$('#kasseIn').value; if (!v) return; S.kasseCP += Math.round(v * GP) * +b.dataset.s; log(`Kasse ${+b.dataset.s > 0 ? '+' : '−'}${fmt(Math.abs(v * GP))}.`); break; }
+    case 'lq': { const it = S.lager.find(x => x.id === b.dataset.id); if (!it) return; it.qty += +b.dataset.d; if (it.qty <= 0) S.lager = S.lager.filter(x => x !== it); break; }
+    case 'ldel': S.lager = S.lager.filter(x => x.id !== b.dataset.id); break;
+    case 'ladd': { const n = $('#lName').value.trim(); if (!n) return; addLager(n, Math.max(1, +$('#lQty').value || 1), Math.round((+$('#lVal').value || 0) * GP)); break; }
+    case 'event': {
+      const r = roll('1W100').total, ev = EVENTS.find(x => r >= x[0] && r <= x[1]);
+      let extra = '';
+      if (['Criminal Hireling','Friendly Visitors','Refugees'].includes(ev[2])) { const g = roll('1W6').total; extra = `Vorgewürfelt: 1W6 × 100 = ${g * 100} GP`; }
+      if (ev[2] === 'Refugees') extra = `Flüchtlinge: ${roll('2W4').total} · ` + extra;
+      if (ev[2] === 'Attack'){ const d = roll('6W6'); extra = `6W6: ${d.rolls.join(', ')} → ${d.rolls.filter(x => x === 1).length} Defender-Verlust(e)`; }
+      if (ev[2] === 'Lost Hirelings' || (ev[2] === 'Attack' && S.facilities.length)){ const fx = S.facilities[Math.floor(Math.random() * S.facilities.length)]; if (fx) extra += (extra ? ' · ' : '') + `Betroffene Facility (zufällig): ${fx.name}`; }
+      S.lastEvent = {roll:r, name:ev[2], text:ev[3], extra, day:S.day};
+      log(`Maintain-Event: W100 = ${r} → ${ev[2]}${extra ? ' (' + extra + ')' : ''}.`);
+      break;
+    }
+    case 'clearlog': if (!confirm('Logbuch leeren?')) return; S.log = []; break;
+    case 'addlog': { const v = $('#logIn').value.trim(); if (!v) return; log(v); break; }
+    default: return;
+  }
+  render();
+});
+document.addEventListener('change', e => {
+  const el = e.target, a = el.dataset.a;
+  if (a === 'level'){ const c = charById(el.dataset.id); const v = Math.min(20, Math.max(1, +el.value || 1)); if (c.level !== v){ log(`${c.name}: Stufe ${c.level} → ${v} (${slotsFor(v)} Special Facilities).`); c.level = v; } render(); }
+  else if (a === 'owner'){ const f = facById(el.dataset.f); f.owner = el.value; log(`${f.name} → ${charById(el.value).name}.`); render(); }
+  else if (a === 'addfac' && el.value){
+    const k = el.value, c = CATALOG[k], n = S.facilities.filter(f => f.type === k).length;
+    S.facilities.push(fac('f_' + uid(), k, c.name + (n ? ' ' + (n + 1) : ''), '', el.dataset.owner, '', ''));
+    log(`Neue Special Facility: ${c.name} (${charById(el.dataset.owner).name}).`); render();
+  }
+  else if (a === 'notes'){ facById(el.dataset.f).notes = el.value; save(); }
+  else if (a === 'preview'){ updatePreview(el.closest('[data-form]')); }
+});
+document.addEventListener('input', e => { const form = e.target.closest('[data-form]'); if (form) updatePreview(form); });
+$('#importFile').addEventListener('change', e => {
+  const file = e.target.files[0]; if (!file) return;
+  const r = new FileReader();
+  r.onload = () => { try { const d = JSON.parse(r.result); if (!d.facilities || !d.chars) throw 0; S = d; UI.openForm = null; log('Spielstand importiert.'); render(); toast('Import erfolgreich.'); } catch(err){ toast('Ungültige Datei.'); } };
+  r.readAsText(file); e.target.value = '';
+});
+render();
+</script>
+</body>
+</html>
