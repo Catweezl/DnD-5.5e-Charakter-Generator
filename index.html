@@ -155,6 +155,8 @@ let state = {
   abilityScores: {Strength:10,Dexterity:10,Constitution:10,Intelligence:10,Wisdom:10,Charisma:10},
   rolledValues: [null,null,null,null,null,null],
   rolledAssignment: {}, // ability -> index into rolledValues
+  diceAbilityRolls: null, // Würfelbecher: [{dice:[4], dropIdx, total}] ×6 (nur Anzeige bis 'Übernehmen')
+  diceAbilityApplied: false,
   standardAssignment: {}, // ability -> value
   speciesId: null,
   speciesSubChoice: null, // e.g. Elven Lineage / Draconic Ancestry / Fiendish Legacy / Giant Ancestry
@@ -388,7 +390,8 @@ function renderAbilityStep(){
   let inputsHtml = '';
   if(state.abilityMethod==='roll'){
     inputsHtml += '<h3 style="margin-top:20px;">Werte zuweisen</h3>';
-    inputsHtml += '<p style="font-size:0.85em;color:var(--muted);">Trage die 6 am Tisch gewürfelten Werte ein (z.B. 4W6, niedrigsten weglassen).</p>';
+    inputsHtml += '<p style="font-size:0.85em;color:var(--muted);">Trage die 6 am Tisch gewürfelten Werte ein (z.B. 4W6, niedrigsten weglassen) – oder nutze den Würfelbecher.</p>';
+    inputsHtml += renderAbilityDiceBox();
     inputsHtml += '<div class="grid3">';
     for(let i=0;i<6;i++){
       inputsHtml += `<div><label>Wert ${i+1}</label><input type="number" min="1" max="20" id="rolled_${i}" value="${state.rolledValues[i]??''}" onchange="onRolledValueChange()"></div>`;
@@ -423,11 +426,64 @@ function renderAbilityStep(){
   </div>`;
 }
 
+// ---------- WÜRFELBECHER (Attribute + HP) ----------
+// Fair die roll via crypto.getRandomValues (rejection sampling, no modulo bias); Math.random fallback.
+function rollDie(sides){
+  if(window.crypto && window.crypto.getRandomValues){
+    const buf = new Uint32Array(1);
+    const limit = Math.floor(0x100000000 / sides) * sides;
+    let x;
+    do { window.crypto.getRandomValues(buf); x = buf[0]; } while(x >= limit);
+    return (x % sides) + 1;
+  }
+  return Math.floor(Math.random()*sides)+1;
+}
+// 6× 4W6, niedrigsten Würfel streichen → Anzeige; erst "Übernehmen" schreibt in Wert 1–6
+function rollAbilityDice(){
+  state.diceAbilityRolls = [];
+  for(let i=0;i<6;i++){
+    const dice = [rollDie(6),rollDie(6),rollDie(6),rollDie(6)];
+    let dropIdx = 0;
+    dice.forEach((d,idx)=>{ if(d < dice[dropIdx]) dropIdx = idx; });
+    const total = dice.reduce((a,b)=>a+b,0) - dice[dropIdx];
+    state.diceAbilityRolls.push({dice, dropIdx, total});
+  }
+  render();
+}
+function applyAbilityDice(){
+  if(!state.diceAbilityRolls) return;
+  state.rolledValues = state.diceAbilityRolls.map(r=>r.total);
+  state.diceAbilityApplied = true;
+  render();
+}
+function renderAbilityDiceBox(){
+  const rolls = state.diceAbilityRolls;
+  let html = `<div class="choice-box dice-box" style="margin-top:14px;">
+    <h4 style="margin-top:0;">🎲 Würfelbecher</h4>
+    <button type="button" onclick="rollAbilityDice()">🎲 6× 4W6 würfeln (niedrigster fällt weg)</button>`;
+  if(rolls){
+    html += `<div class="dice-results" style="margin-top:10px;display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:6px;">` +
+      rolls.map((r,i)=>`<div style="padding:6px 8px;border:1px solid var(--border,#5a4636);border-radius:6px;">
+        <span style="color:var(--muted);font-size:0.85em;">Wurf ${i+1}:</span>
+        [${r.dice.map((d,idx)=> idx===r.dropIdx ? `<s style="opacity:0.45;">${d}</s>` : `${d}`).join(', ')}]
+        = <b style="font-size:1.1em;">${r.total}</b></div>`).join('') +
+      `</div>
+      <div style="margin-top:8px;">
+        <button type="button" onclick="applyAbilityDice()">✔ Übernehmen in Wert 1–6</button>
+        <span style="font-size:0.8em;color:var(--muted);margin-left:6px;">Summe: ${rolls.reduce((a,r)=>a+r.total,0)}${state.diceAbilityApplied?' · übernommen':''}</span>
+      </div>`;
+  } else {
+    html += `<p style="font-size:0.8em;color:var(--muted);margin:6px 0 0;">Erneutes Würfeln ändert nur diese Anzeige – erst „Übernehmen" trägt die Werte ein. Manuelles Eintragen bleibt möglich.</p>`;
+  }
+  return html + `</div>`;
+}
+
 function onRolledValueChange(){
   for(let i=0;i<6;i++){
     const el = document.getElementById('rolled_'+i);
     state.rolledValues[i] = el.value ? parseInt(el.value) : null;
   }
+  state.diceAbilityApplied = false;
   renderRollAssignArea();
 }
 
@@ -975,7 +1031,11 @@ function renderHPStep(){
       </div>`;
     if(stored.mode==='roll'){
       html += `<div style="margin-top:8px;"><label style="font-weight:normal;">Gewürfelter Wert (1-${entry.hitDie})</label>
-        <input type="number" min="1" max="${entry.hitDie}" style="max-width:100px;" data-hprollinput="${key}" value="${stored.rollValue||''}"></div>`;
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+          <input type="number" min="1" max="${entry.hitDie}" style="max-width:100px;" data-hprollinput="${key}" value="${stored.rollValue||''}">
+          <button type="button" class="small" data-hpdice="${key}|${entry.hitDie}">🎲 W${entry.hitDie}</button>
+          ${stored.diceRolled ? `<span style="font-size:0.9em;">W${entry.hitDie} → <b>${stored.rollValue}</b></span>` : ''}
+        </div></div>`;
     }
     const thisVal = stored.mode==='average' ? fixedVal+conMod : (stored.mode==='roll' && stored.rollValue ? stored.rollValue+conMod : null);
     if(thisVal!==null){ runningTotal += thisVal; }
@@ -996,6 +1056,13 @@ function attachHPHandlers(){
     el.onclick = ()=>{
       const [key, mode] = el.getAttribute('data-hpmode').split('|');
       state.hpRolls[key] = {mode};
+      render();
+    };
+  });
+  document.querySelectorAll('[data-hpdice]').forEach(el=>{
+    el.onclick = ()=>{
+      const [key, die] = el.getAttribute('data-hpdice').split('|');
+      state.hpRolls[key] = {mode:'roll', rollValue: rollDie(parseInt(die)), diceRolled:true};
       render();
     };
   });
